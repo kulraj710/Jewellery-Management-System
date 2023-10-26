@@ -1,0 +1,167 @@
+.invoice-img{
+  width: 214mm; /* Convert to pixels if necessary */
+  height: 297mm; /* Convert to pixels if necessary */
+  max-width: 100%; /* Ensure the image doesn't exceed the A4 size */
+  max-height: 100%; /* Ensure the image doesn't exceed the A4 size */
+}
+
+.img-container{
+    /* background-color: green; */
+    /* padding: 2rem; */
+    border: 1px solid red;
+    max-width: 100% !important; /* Ensure the image doesn't exceed the A4 size */
+    max-height: 100% !important; /* Ensure the image doesn't exceed the A4 size */
+    min-width: 210mm;
+    min-height: 297mm;
+    width: 210mm; /* Convert to pixels if necessary */
+    height: 297mm; /* Convert to pixels if necessary */
+  
+    /* positon */
+    position: relative;
+}
+/* .content-container{
+    background-color: green;
+    width: 100;
+} */
+
+.section1{
+    position: absolute;
+    top: 3.7cm;
+    left: 14cm;
+    text-align: center;
+    /* border: 1px solid black; */
+    /* width: 100%; */
+}
+
+.invoice_no{
+    font-size: 3.2mm;
+}
+
+.invoice_no > span {
+    border-bottom: 2px dotted maroon;
+    font-size: 4mm;
+    padding-left: 8mm;
+}
+
+.invoice_date{
+    font-size: 3.2mm;
+    position: absolute;
+    top: 0.8cm;
+    left: -0.1cm;
+    width: 5cm;
+    /* background-color: green; */
+}
+
+.invoice_date > span {
+    font-size: 4mm;
+    padding-left: 2mm;
+}
+
+
+/* section2 */
+.section2{
+    position: absolute;
+    top: 7cm;
+    left: 1.2cm;
+    /* border: 1px solid black; */
+    width: 18.7cm;
+    
+}
+.tax_head{
+    font-size: 5mm;
+    text-align: center;
+
+}
+
+
+
+/* table 1 */
+.contact-info {
+    border-collapse: collapse;
+    border: 1px solid black;
+    width: calc(18.7cm - 0.7cm);
+    margin: 0 auto;
+    font-size: 3.2mm;
+  }
+ 
+  #add-table{
+    border: none !important;
+  }
+  #gst-table{
+    border: none !important;
+  }
+  
+  td {
+    border: 1px solid black;
+    border-top: none;
+  }
+  
+  .label {
+    /* text-align: right; */
+    font-weight: bold;
+    padding: 1mm;
+    width: 3cm;
+  }
+  
+  .value {
+    padding: 1mm;
+  }
+.pan_no{
+    position: absolute;
+    font-weight: bold;
+    left: 12cm;
+}
+.phone_no{
+    position: absolute;
+    font-weight: bold;
+    left: 12cm;
+}
+
+/* section 3 */
+.section3{
+        position: absolute;
+        top: 10.1cm;
+        left: 1.2cm;
+        /* border: 1px solid black; */
+        width: 18.7cm;
+    
+}
+
+/* section 4 */
+/* .section4{
+    position: absolute;
+        top: 18.1cm;
+        left: 1.2cm;
+        border: 1px solid black;
+        width: 18.7cm;
+} */
+
+.section4-flex{
+    display: flex;
+    justify-content: space-between;
+    width: 18cm;
+    margin: 0 auto;
+}
+
+.total-row{
+    /* background-color: lightgrey; */
+    border: 1px solid black;
+    width: 18cm;
+    text-align: right;
+    padding-right : 6mm;
+    margin: 0 auto;
+}
+.notes{
+    border : 1px solid black;
+    width: 100%;
+}
+
+/* section 5 */
+.section5{
+    position: absolute;
+        top: 22.5cm;
+        left: 1.2cm;
+        /* border: 1px solid black; */
+        width: 18.7cm;
+        height: 3cm;
+}

@@ -1,0 +1,31 @@
+.form-container{
+    /* background-color : rgb(221, 231, 221); */
+    width: 700px !important;
+    padding: 2rem;
+}
+/* formContainer.css */
+
+/* Style for horizontal line */
+.hr-line {
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+  }
+  
+  /* Style for step numbers */
+  .step-number {
+    background-color: #0074d9;
+    color: #fff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .invoice-heading {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+  }

@@ -1,0 +1,32 @@
+.bill-info{
+    width: 6cm;
+    font-size: 3mm;
+    border-collapse: collapse;
+    border: 1px solid black;
+    /* width: calc(18.7cm - 0.7cm); */
+    margin-left: auto;
+    /* font-size: 3.2mm; */
+}
+
+td {
+    border: 1px solid black;
+    border-top: none;
+  }
+  
+  .label {
+    /* text-align: right; */
+    font-weight: bold;
+    padding: 1mm;
+  }
+  
+  .value {
+    padding: 1mm;
+    font-size:
+     1.1em;
+  }
+.total-amount{
+  background-color: lightgrey;
+}
+.bold{
+  font-weight: bold;
+}
