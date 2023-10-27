@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import "../../css/form/formContainer.css";
 import Section1 from "./Section1";
 import Section2 from "./Section2";
@@ -6,9 +6,10 @@ import Section3 from "./Section3";
 import Section4 from "./Section4";
 import Section5 from "./Section5";
 import Button from "@mui/material/Button";
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { useNavigate  } from "react-router-dom"
+import { parse } from "date-fns";
+import { useNavigate } from "react-router-dom"
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const FormContainer = ({
   sec1,
@@ -23,28 +24,46 @@ const FormContainer = ({
   setSec5,
   calculate,
   setCalculate,
-  discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst,payment, setPayment, totalAmount, setTotalAmount 
+  discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst, payment, setPayment, totalAmount, setTotalAmount
 }) => {
 
 
-  const router = useNavigate() 
-  const [isBackgroundNeeded, setIsBackgroundNeeded] = useState(false)
+  const router = useNavigate()
+  const [loading, setLoading] = useState(false)
 
-  const handlePrint = () => {
-    // const a = document.getElementById("home-form")
-    // const b = document.getElementById("invoice-img")
-    // const InvoiceContainer = document.querySelector("img-container")
+  const handlePrint = async () => {
+    setLoading(true)
+    try {
+      const docRef = await addDoc(collection(db, "invoice"), {
+        invoiceType: sec2.invoiceType,
+        address: sec3.address || "",
+        cgst: cgst,
+        sgst: sgst,
+        discount: discount || 0,
+        gstin: sec3.gstin || "",
+        invoiceDate: parse(sec1.date, "dd-MM-yyyy", new Date()),
+        invoiceNo: sec1.invoice || 0,
+        name: sec3.name || "NO NAME GIVEN",
+        phone: sec3.phone || "-",
+        netAmt: netAmount,
+        pan: sec3.pan || "-",
+        payment: payment,
+        totalAmt: totalAmount,
+        productTable: sec4
 
-    // a.style.display = 'none'
-    // if (!isBackgroundNeeded){
-    //   b.style.display = 'none'
-    // }
-    // window.print() 
-    router('/')
+      })
+      console.log("Document written with ID: ", docRef.id)
+      setLoading(false)
+      router('/')
+
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
+      alert("Something Went Wrong, Check yout Internet Connection!")
+    }
   }
   return (
     <div className="form-container">
-      <h1 className="invoice-heading">New Invoice</h1>
       <div id="sec1-form">
         <div className="step">
           <div className="step-number">1</div>
@@ -52,47 +71,43 @@ const FormContainer = ({
         <Section1 sec1={sec1} setSec1={setSec1} />
       </div>
 
-    <hr className="hr-line" />
+      <hr className="hr-line" />
 
       <div id="sec2-form">
         <div className="step">
           <div className="step-number">2</div>
         </div>
-        <Section2 sec2={sec2} setSec2={setSec2}/>
+        <Section2 sec2={sec2} setSec2={setSec2} />
       </div>
       <hr className="hr-line" />
       <div id="sec3-form">
         <div className="step">
           <div className="step-number">3</div>
         </div>
-        <Section3 sec3={sec3} setSec3={setSec3}/>
+        <Section3 sec3={sec3} setSec3={setSec3} />
       </div>
       <hr className="hr-line" />
       <div id="sec4-form">
         <div className="step">
           <div className="step-number">4</div>
         </div>
-        <Section4 sec4={sec4} setSec4={setSec4} calculate={calculate} setCalculate={setCalculate}/>
+        <Section4 sec4={sec4} setSec4={setSec4} calculate={calculate} setCalculate={setCalculate} />
       </div>
       <hr className="hr-line" />
       <div id="sec5-form">
         <div className="step">
           <div className="step-number">5</div>
         </div>
-        <Section5 calculate={calculate.tvalTotal} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount}/>
+        <Section5 calculate={calculate.tvalTotal} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
       </div>
 
 
-        <div className="step">
+      <div className="step">
         <div className="step-number">6</div>
-<div style={{paddingLeft : '4rem', paddingBottom : '1.5rem'}}>
+        <div style={{ paddingLeft: '4rem' }}>
 
-        <FormControlLabel value={isBackgroundNeeded} onChange={(e) => {setIsBackgroundNeeded(e.target.value)}} control={<Checkbox />} label="Background graphics" labelPlacement="end"/>
-</div>
-<div style={{paddingLeft : '4rem'}}>
-
-        <Button variant="contained" onClick={handlePrint}>Print</Button>
-</div>
+          <Button variant="contained" onClick={handlePrint}>{!loading ? "Create Invoice" : "creating..."}</Button>
+        </div>
 
       </div>
     </div>

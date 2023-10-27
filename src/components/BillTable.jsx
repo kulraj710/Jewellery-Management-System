@@ -6,7 +6,7 @@ const BillTable = ({discount, setDiscount, netAmount, setNetAmount, cgst, setCgs
   return (
     <table className="bill-info">
         <tbody>
-    {(discount === '0') ? null : <tr>
+    {(discount === '0' || discount === 0) ? null : <tr>
       <td className="label"><b>Discount</b></td>
       <td className="value">{discount}</td>
     </tr>}
@@ -15,8 +15,8 @@ const BillTable = ({discount, setDiscount, netAmount, setNetAmount, cgst, setCgs
       <td className="value">{netAmount} &#8377; </td>
     </tr>
     <tr>
-      <td className="label"><b>CGST (1.50%) :</b></td>
-      <td className="value" contentEditable>{cgst} 	&#8377;</td>
+      <td className="label"><b>CGST (1.50%)</b></td>
+      <td className="value">{cgst} 	&#8377;</td>
     </tr>
     <tr>
       <td className="label"><b>SGST (1.50%)</b></td>
@@ -31,7 +31,7 @@ const BillTable = ({discount, setDiscount, netAmount, setNetAmount, cgst, setCgs
       <td className="value">{payment} 	&#8377; </td>
     </tr>
     <tr>
-      <td className="label"><b>Bill OutStanding</b></td>
+      <td className="label"><b>Bill Outstanding</b></td>
       <td className="value bold">{(totalAmount - payment).toFixed(2)} 	&#8377; </td>
     </tr>
     </tbody>

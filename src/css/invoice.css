@@ -8,7 +8,7 @@
 .img-container{
     /* background-color: green; */
     /* padding: 2rem; */
-    border: 1px solid red;
+    /* border: 1px solid red; */
     max-width: 100% !important; /* Ensure the image doesn't exceed the A4 size */
     max-height: 100% !important; /* Ensure the image doesn't exceed the A4 size */
     min-width: 210mm;
@@ -159,7 +159,7 @@
 /* section 5 */
 .section5{
     position: absolute;
-        top: 22.5cm;
+        top: 22.56cm;
         left: 1.2cm;
         /* border: 1px solid black; */
         width: 18.7cm;

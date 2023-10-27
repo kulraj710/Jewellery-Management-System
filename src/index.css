@@ -75,3 +75,58 @@ button:focus-visible {
   width: 100%;
   justify-content: space-between;
 }
+#home-form{
+ height: 86vh;
+ overflow-y: auto;
+ overflow-x: hidden;
+ scrollbar-width: thin;
+ scrollbar-color: #888 #f1f1f1;
+}
+
+#invoice-in-createInvoice{
+  scale: 90%;
+  height: 86vh;
+  overflow-y: auto;
+ overflow-x: hidden;
+ scrollbar-width: thin;
+ scrollbar-color: #888 #f1f1f1;
+}
+
+/* scroll bar design for createINvoice page */
+/* Style for the WebKit-based browsers (Chrome, Safari) */
+#invoice-in-createInvoice::-webkit-scrollbar {
+  width: 6px;
+}
+
+#invoice-in-createInvoice::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#invoice-in-createInvoice::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+}
+
+/* Style for Firefox */
+
+#invoice-in-createInvoice::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+#home-form::-webkit-scrollbar {
+  width: 6px;
+}
+
+#home-form::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#home-form::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+}
+
+#home-form::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

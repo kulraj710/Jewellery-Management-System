@@ -5,10 +5,10 @@ import ProductTable from './ProductTable'
 import BillTable from './BillTable'
 import SignTable from './signTable'
 
-const Invoice = ({sec1, sec2, sec3, sec4,sec5, calculate, discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst,payment, setPayment, totalAmount, setTotalAmount}) => {
+const Invoice = React.forwardRef(({sec1, sec2, sec3, sec4,sec5, calculate, discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst,payment, setPayment, totalAmount, setTotalAmount}, ref) => {
   
   return (
-    <div className='printable-content' id='get-print'>
+    <div ref={ref} className='printable-content' id='get-print'>
       <div className='img-container'>
       <img className='invoice-img' id='invoice-img' src={img} alt="Image" />
 
@@ -22,7 +22,7 @@ const Invoice = ({sec1, sec2, sec3, sec4,sec5, calculate, discount, setDiscount,
           
           <table className="contact-info">
             <tbody>
-      <tr>
+      <tr className='personal'>
         <td className="label"><b>Name:</b></td>
         <td className="value" style={{width : '40%'}}>{sec3.name} </td>
         <td className="value">Phone  : {sec3.phone} </td>
@@ -76,6 +76,6 @@ const Invoice = ({sec1, sec2, sec3, sec4,sec5, calculate, discount, setDiscount,
       </div>
       </div>
   )
-}
+})
 
 export default Invoice
