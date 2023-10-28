@@ -24,7 +24,7 @@ export default function ViewInvoiceDialog({open, setOpen, data, printRef}) {
       <Dialog
         open={open}
         TransitionComponent={Transition}
-        keepMounted={true}
+        keepMounted
         onClose={handleClose}
         fullWidth
         maxWidth={'md'}
@@ -33,7 +33,7 @@ export default function ViewInvoiceDialog({open, setOpen, data, printRef}) {
         <DialogTitle>Invoice No. {data.invoiceNo}</DialogTitle>
         <DialogContent>
           {/* <Invoice/> */}
-           <Invoice ref={printRef} sec1={{invoice : data.invoiceNo, date : format(data.invoiceDate.toDate(), "dd-MM-yyyy")}} sec2={{invoiceType : data.invoiceType}} sec3={{ name : data.name, phone : data.phone, address : data.address, gstin : data.gstin, pan : data.pan }} sec4={data.productTable} discount={data.discount} netAmount={data.netAmt} cgst={data.cgst} sgst={data.sgst} payment={data.payment} totalAmount={data.totalAmt}/>
+           <Invoice ref={printRef} sec1={{invoice : data.invoiceNo, date : format(data.invoiceDate.toDate(), "dd-MM-yyyy")}} sec2={{invoiceType : data.invoiceType}} sec3={{ name : data.name, phone : data.phone, address : data.address, gstin : data.gstin, pan : data.pan }} sec4={data.productTable} discount={data.discount} netAmount={data.netAmt} cgst={data.cgst} sgst={data.sgst} payment={data.payment} totalAmount={data.totalAmt} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>

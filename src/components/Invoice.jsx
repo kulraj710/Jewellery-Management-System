@@ -5,8 +5,7 @@ import ProductTable from './ProductTable'
 import BillTable from './BillTable'
 import SignTable from './signTable'
 
-const Invoice = React.forwardRef(({sec1, sec2, sec3, sec4,sec5, calculate, discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst,payment, setPayment, totalAmount, setTotalAmount}, ref) => {
-  
+const Invoice = React.forwardRef(({sec1, sec2, sec3, sec4,sec5, calculate, discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst,payment, setPayment, totalAmount, setTotalAmount}, ref) => {  
   return (
     <div ref={ref} className='printable-content' id='get-print'>
       <div className='img-container'>

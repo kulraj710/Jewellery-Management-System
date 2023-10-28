@@ -26,7 +26,6 @@ const Section3 = ({sec3,  setSec3}) => {
         </div>
         <div>
         <TextField
-          required
           label="Phone"
           placeholder="Phone"
           name='phone'
@@ -37,7 +36,6 @@ const Section3 = ({sec3,  setSec3}) => {
         
         <div>
         <TextField
-          required
           fullWidth
           name='address'
           onChange={handleInputChange}

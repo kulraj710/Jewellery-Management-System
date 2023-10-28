@@ -39,8 +39,7 @@ const Section1 = ({sec1, setSec1}) => {
           label="Invoice Date"
           value={sec1.date}
           name='date'
-  onChange={handleInputChange}
-          defaultValue={format(new Date(), "dd-MM-yyyy")}
+          onChange={handleInputChange}
         />
         </div>
     </div>

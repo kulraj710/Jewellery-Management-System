@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,6 +14,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import ViewInvoiceDialog from './ViewInvoiceDialog';
 import { useReactToPrint } from 'react-to-print';
+import ReactToPrint from 'react-to-print';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -23,7 +24,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    border : 'none !important'
+    border: 'none !important'
   },
 }));
 
@@ -37,29 +38,38 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function InvoiceTableMui({rows}) {
+export default function InvoiceTableMui({ rows }) {
 
-  const [openViewMode, setOpenViewMode] = useState(false)
+  
+  const printRef = Array.from({ length: rows.length }, () => useRef());
 
-  const printRef = useRef()
-  const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-    onBeforeGetContent: () => {
-      const b = document.getElementById("invoice-img")
-      b.style.display = 'none'
-    },
-    onAfterPrint: () => {
-      const b = document.getElementById("invoice-img")
-      b.style.display = ''
-    }
-  })
-  const handleCopy = useReactToPrint({
-    content: () => printRef.current
-  })
+  const [openViewModes, setOpenViewModes] = useState(Array(rows.length).fill(false))
+
+
+  const handleRowView = (index) => {
+    console.log('clicked on ' + index)
+    const updatedModes = [...openViewModes]
+    updatedModes[index] = true
+    setOpenViewModes(updatedModes)
+  }
 
   return (
-    <TableContainer component={Paper} style={{width : '80%', margin : '3rem auto', }}>
-      {/* <ViewInvoiceDialog open={openViewMode} setOpen={setOpenViewMode} data={rows} printRef={printRef}/> */}
+    <TableContainer component={Paper} style={{ width: '80%', margin: '3rem auto', }}>
+      <div>
+        {openViewModes.map((r, index) => (
+          <ViewInvoiceDialog
+            key={index}
+            open={r}
+            setOpen={() => {
+              const updatedModes = [...openViewModes]
+              updatedModes[index] = false
+              setOpenViewModes(updatedModes)
+            }}
+            data={rows[index]}
+            printRef={printRef[index]}
+          />
+        ))}
+      </div>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -75,10 +85,8 @@ export default function InvoiceTableMui({rows}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <>
-            <ViewInvoiceDialog key={row.invoiceNo} open={openViewMode} setOpen={setOpenViewMode} data={row} printRef={printRef}/>
-            <StyledTableRow key={row.invoiceNo}>
+          {rows.map((row, index) => (
+            <StyledTableRow key={row.invoiceDate}>
               <StyledTableCell component="th" scope="row">
                 {row.invoiceNo}
               </StyledTableCell>
@@ -87,11 +95,35 @@ export default function InvoiceTableMui({rows}) {
               <StyledTableCell align="right">{row.totalAmt}</StyledTableCell>
               <StyledTableCell align="right">{row.payment}</StyledTableCell>
               <StyledTableCell align="right">{row.totalAmt - row.payment}</StyledTableCell>
-              <StyledTableCell align="right"><Button onClick={() => setOpenViewMode(true)}>View</Button></StyledTableCell>
-              <StyledTableCell align="right"><IconButton onClick={handlePrint}><PrintIcon/></IconButton></StyledTableCell>
-              <StyledTableCell align="right"><IconButton onClick={handleCopy}><FileCopyOutlinedIcon /></IconButton></StyledTableCell>
+              <StyledTableCell align="right"><Button onClick={() => handleRowView(index)}>View</Button></StyledTableCell>
+
+              <StyledTableCell align="right">
+                <ReactToPrint
+                  trigger={() => (
+                    <IconButton><PrintIcon /></IconButton>
+                  )}
+
+                  content={() => printRef[index].current}
+                  onBeforeGetContent={() => {
+                    const b = document.getElementById("invoice-img")
+                    b.style.display = 'none'
+                  }}
+                  onAfterPrint={() => {
+                    const b = document.getElementById("invoice-img")
+                    b.style.display = 'block'
+                  }}
+                />
+              </StyledTableCell>
+
+              <StyledTableCell align="right">
+              <ReactToPrint
+                  trigger={() => (
+                    <IconButton><FileCopyOutlinedIcon /></IconButton>
+                  )}
+                  content={() => printRef[index].current}
+                />
+              </StyledTableCell>
             </StyledTableRow>
-            </>
           ))}
         </TableBody>
       </Table>

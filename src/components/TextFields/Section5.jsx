@@ -61,20 +61,20 @@ const Section5 = ({ calculate, discount, setDiscount, netAmount, setNetAmount, c
           <TextField label="Net Amount" value={netAmount} />
         </div>
       </div>
-
+{/* 
       <FormControlLabel
           value="start"
           control={<Checkbox />}
           label="Add GST"
           labelPlacement="start"
-        />
+        /> */}
 
       <div style={styles}>
         <div>
-          <TextField label="CGST (1.50%)" value={cgst} />
+          <TextField label="CGST (1.50%)" value={cgst} disabled/>
         </div>
         <div>
-          <TextField label="SGST (1.50%)" value={sgst} />
+          <TextField label="SGST (1.50%)" value={sgst} disabled/>
         </div>
       </div>
 

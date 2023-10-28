@@ -32,8 +32,9 @@ const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
         const netw = parseFloat(values.net)
         
         if(!isNaN(netw) && !isNaN(num1)){
-          setCurrentAmt((num1 * netw))
-          setValues(prev => ({...prev, amt : (num1 * netw)}))
+          const val = Math.round(num1 * netw)
+          setCurrentAmt(val)
+          setValues(prev => ({...prev, amt : val}))
         }
          else {
             setCurrentAmt(0)
@@ -111,7 +112,7 @@ const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
         <TextField value={values.lbr} required label="Lbr Amt" name='lbr' onChange={handleChange} placeholder="Lbr Amt" />
         </div>
         <div>
-        <TextField disabled value={(currentTval).toFixed(2)} required label="Total Amount" name='tval' onChange={handleChange} />
+        <TextField disabled value={(currentTval).toFixed(2)} label="Total Amount" name='tval' onChange={handleChange} />
         </div>
         </div>
     </div>
