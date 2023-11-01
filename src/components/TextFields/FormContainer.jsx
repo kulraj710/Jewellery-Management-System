@@ -10,8 +10,11 @@ import { parse } from "date-fns";
 import { useNavigate } from "react-router-dom"
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase";
+import Section4Manual from "./Section4Manual";
+import Section5Manual from "./section5Manual";
 
 const FormContainer = ({
+  isManualValues,
   sec1,
   setSec1,
   sec2,
@@ -89,16 +92,18 @@ const FormContainer = ({
       <hr className="hr-line" />
       <div id="sec4-form">
         <div className="step">
-          <div className="step-number">4</div>
+          <div className="step-number">4 </div>
+          {isManualValues ? "(Auto Fill Values = OFF)" : null}
         </div>
-        <Section4 sec4={sec4} setSec4={setSec4} calculate={calculate} setCalculate={setCalculate} />
+        {isManualValues ? <Section4Manual sec4={sec4} setSec4={setSec4} /> : <Section4 sec4={sec4} setSec4={setSec4} calculate={calculate} setCalculate={setCalculate} />}
       </div>
       <hr className="hr-line" />
       <div id="sec5-form">
         <div className="step">
           <div className="step-number">5</div>
+          {isManualValues ? "(Auto Fill Values = OFF)" : null}
         </div>
-        <Section5 calculate={calculate.tvalTotal} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
+        {isManualValues ? <Section5Manual calculate={calculate.tvalTotal} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount}/> : <Section5 calculate={calculate.tvalTotal} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />}
       </div>
 
 

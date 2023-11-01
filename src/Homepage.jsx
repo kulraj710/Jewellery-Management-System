@@ -47,4 +47,3 @@ const Homepage = () => {
 }
 
 export default Homepage
-{/* <Invoice sec1={{invoice : data[0].invoiceNo, date : format(data[0].invoiceDate.toDate(), "dd-MM-yyyy")}} sec2={{invoiceType : data[0].invoiceType}} sec3={{ name : data[0].name, phone : data[0].phone, address : data[0].address, gstin : data[0].gstin, pan : data[0].pan }} sec4={data[0].productTable} discount={data[0].discount} netAmount={data[0].netAmt} cgst={data[0].cgst} sgst={data[0].sgst} payment={data[0].payment} totalAmount={data[0].totalAmt}/> */ }

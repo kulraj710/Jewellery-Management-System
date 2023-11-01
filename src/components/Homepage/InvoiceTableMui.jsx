@@ -13,8 +13,8 @@ import { format } from 'date-fns';
 import PrintIcon from '@mui/icons-material/Print';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import ViewInvoiceDialog from './ViewInvoiceDialog';
-import { useReactToPrint } from 'react-to-print';
-import ReactToPrint from 'react-to-print';
+// import { useReactToPrint } from 'react-to-print';
+import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -39,9 +39,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function InvoiceTableMui({ rows }) {
-
-  
-  const printRef = Array.from({ length: rows.length }, () => useRef());
+// dynamically makes multiple refs
+  const printRef = useRef([])
+  printRef.current = rows.map(
+    (ref, index) => printRef.current[index] = React.createRef()
+  )
+  const copyRef = useRef([])
+  copyRef.current = rows.map(
+    (ref, index) => copyRef.current[index] = React.createRef()
+  )
 
   const [openViewModes, setOpenViewModes] = useState(Array(rows.length).fill(false))
 
@@ -58,7 +64,7 @@ export default function InvoiceTableMui({ rows }) {
       <div>
         {openViewModes.map((r, index) => (
           <ViewInvoiceDialog
-            key={index}
+            key={rows[index].invoiceNo}
             open={r}
             setOpen={() => {
               const updatedModes = [...openViewModes]
@@ -66,7 +72,8 @@ export default function InvoiceTableMui({ rows }) {
               setOpenViewModes(updatedModes)
             }}
             data={rows[index]}
-            printRef={printRef[index]}
+            printRef={printRef.current[index]}
+            copyRef={copyRef.current[index]}
           />
         ))}
       </div>
@@ -86,7 +93,7 @@ export default function InvoiceTableMui({ rows }) {
         </TableHead>
         <TableBody>
           {rows.map((row, index) => (
-            <StyledTableRow key={row.invoiceDate}>
+            <StyledTableRow key={row.invoiceNo}>
               <StyledTableCell component="th" scope="row">
                 {row.invoiceNo}
               </StyledTableCell>
@@ -98,30 +105,23 @@ export default function InvoiceTableMui({ rows }) {
               <StyledTableCell align="right"><Button onClick={() => handleRowView(index)}>View</Button></StyledTableCell>
 
               <StyledTableCell align="right">
-                <ReactToPrint
-                  trigger={() => (
-                    <IconButton><PrintIcon /></IconButton>
-                  )}
-
-                  content={() => printRef[index].current}
-                  onBeforeGetContent={() => {
-                    const b = document.getElementById("invoice-img")
-                    b.style.display = 'none'
-                  }}
-                  onAfterPrint={() => {
-                    const b = document.getElementById("invoice-img")
-                    b.style.display = 'block'
-                  }}
-                />
+                <ReactToPrint content={() => printRef.current[index].current}>
+                    <PrintContextConsumer>
+                       {({ handlePrint }) => (
+                          <IconButton onClick={handlePrint}><PrintIcon /></IconButton>
+                        )}
+          </PrintContextConsumer>
+                </ReactToPrint>
               </StyledTableCell>
 
               <StyledTableCell align="right">
-              <ReactToPrint
-                  trigger={() => (
-                    <IconButton><FileCopyOutlinedIcon /></IconButton>
-                  )}
-                  content={() => printRef[index].current}
-                />
+              <ReactToPrint content={() => copyRef.current[index].current}>
+                  <PrintContextConsumer>
+                    {({ handlePrint }) => (
+                      <IconButton onClick={handlePrint}><FileCopyOutlinedIcon /></IconButton>
+                      )}
+                  </PrintContextConsumer>
+                </ReactToPrint>
               </StyledTableCell>
             </StyledTableRow>
           ))}
