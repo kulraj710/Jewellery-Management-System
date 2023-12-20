@@ -13,8 +13,10 @@ import { format } from 'date-fns';
 import PrintIcon from '@mui/icons-material/Print';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import ViewInvoiceDialog from './ViewInvoiceDialog';
-// import { useReactToPrint } from 'react-to-print';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
+import ConfirmDelete from '../ConfirmDelete';
+
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -38,7 +40,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function InvoiceTableMui({ rows }) {
+export default function InvoiceTableMui({ rows, getDataAgainExplicitly }) {
 // dynamically makes multiple refs
   const printRef = useRef([])
   printRef.current = rows.map(
@@ -48,6 +50,8 @@ export default function InvoiceTableMui({ rows }) {
   copyRef.current = rows.map(
     (ref, index) => copyRef.current[index] = React.createRef()
   )
+  const [openDeletePrompt, setOpenDeletePrompt] = useState(false)
+  const [idToDelete, setIdToDelete] = useState(null)
 
   const [openViewModes, setOpenViewModes] = useState(Array(rows.length).fill(false))
 
@@ -59,8 +63,14 @@ export default function InvoiceTableMui({ rows }) {
     setOpenViewModes(updatedModes)
   }
 
+  async function openDelete(id){
+    setIdToDelete(id)
+    setOpenDeletePrompt(true)
+  }
+
   return (
     <TableContainer component={Paper} style={{ width: '80%', margin: '3rem auto', }}>
+      <ConfirmDelete open={openDeletePrompt} setOpen={setOpenDeletePrompt} idToDelete={idToDelete} setIdToDelete={setIdToDelete} getDataAgainExplicitly={getDataAgainExplicitly}/>
       <div>
         {openViewModes.map((r, index) => (
           <ViewInvoiceDialog
@@ -89,6 +99,7 @@ export default function InvoiceTableMui({ rows }) {
             <StyledTableCell align="right">Action</StyledTableCell>
             <StyledTableCell align="right">Print</StyledTableCell>
             <StyledTableCell align="right">Copy</StyledTableCell>
+            <StyledTableCell align="right">Delete</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -123,6 +134,9 @@ export default function InvoiceTableMui({ rows }) {
                   </PrintContextConsumer>
                 </ReactToPrint>
               </StyledTableCell>
+              
+              <StyledTableCell><IconButton onClick={() => openDelete(row.id)}><RemoveCircleIcon style={{color : '#d11a2a'}}/></IconButton></StyledTableCell>
+
             </StyledTableRow>
           ))}
         </TableBody>

@@ -66,24 +66,6 @@ const CustomTable = ({ data, columns }) => {
 };
 
 const ProductTable = ({sec4}) => {
-  // const data = [
-  //   // AdProd your data here
-  //   {sno : "1", pd : "BTC1203-3243-sFKSFKSkSSLFF- HFJsdfdskl fjlk  (EARRING)", hsn : "234", pcs : 1, gr : 12, net : 45, rate : 23445, amt : '23434', lbr : 2345, tval : 23546},
-  //   // {sno : "2", pd : "3243-sFKSFKSkSSLFF (BISCUIT)", hsn : "234", pcs : 1, gr : 12, net : 45, rate : 23445, amt : '23434', lbr : 2345, tval : 23546},
-  //   // {sno : "3", pd : "BTC1203-3243-sFKSFKSkSSLFF (EARRING)", hsn : "234", pcs : 1, gr : 12, net : 45, rate : 23445, amt : '23434', lbr : 2345, tval : 23546},
-  //   // {sno : "4", pd : "BTC1203-3243-sFKSFKklj-345-543-44SkSSLFF (EARRING)", hsn : "234", pcs : 1, gr : 12, net : 45, rate : 23445, amt : '23434', lbr : 2345, tval : 23546},
-  //   // {sno : "5", pd : "BTC1203-3243-sFKSFKSkSSLFF (EARRING)", hsn : "234", pcs : 1, gr : 12, net : 45, rate : 23445, amt : '23434', lbr : 2345, tval : 23546},
-  //   // {sno : "6", pd : "BTC1203-3243-sFKSFKSkSSLFF (EARRING)", hsn : "234", pcs : 1, gr : 12, net : 45, rate : 23445, amt : '23434', lbr : 2345, tval : 23546},
-  //   // {sno : "7", pd : "BTC1203-3243-sFKSFKSkSSLFF (EARRING)", hsn : "234", pcs : 1, gr : 12, net : 45, rate : 23445, amt : '23434', lbr : 2345, tval : 23546},
-  //   // {sno : "8", pd : "BTC1203-3243-sFKSFKSkSSLFF (EARRING)", hsn : "234", pcs : 1, gr : 12, net : 45, rate : 23445, amt : '23434', lbr : 2345, tval : 23546},
-  //   // {sno : "9", pd : "BTC1203-3243-sFKSFKSkSSLFF (EARRING)", hsn : "234", pcs : 1, gr : 12, net : 45, rate : 23445, amt : '23434', lbr : 2345, tval : 23546},
-  //   // {tval : "-"},
-  //   // {tval : "-"},
-  //   // {tval : "-"},
-  //   // {tval : "-"},
-  //   // {tval : "-"},
-  //   // {tval : "-"},
-  // ];
 
   const columns = [
     {

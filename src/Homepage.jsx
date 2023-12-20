@@ -16,7 +16,10 @@ const Homepage = () => {
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       
-      a.push(doc.data())
+      a.push({
+        id: doc.id,
+        ...doc.data(),
+      })
     })
     setData(a.sort((k, m) => m.invoiceNo - k.invoiceNo))
     setLoading(false)
@@ -36,7 +39,7 @@ const Homepage = () => {
       </section>
       <section>
         {!loading ? <div>
-          <InvoiceTableMui rows={data} />
+          <InvoiceTableMui rows={data} setRows={setData} getDataAgainExplicitly={getData}/>
         </div> :
           <div>
             <CircularProgress />
