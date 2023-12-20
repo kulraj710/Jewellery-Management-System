@@ -1,15 +1,20 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
 
-const Section5 = ({ calculate, discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst,payment, setPayment, totalAmount, setTotalAmount }) => {
+
+const Section5 = ({ calculate, discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst,payment, setPayment, totalAmount, setTotalAmount, sec4 }) => {
+
+console.log(calculate)
+console.log(typeof(calculate))
+
+
+
 
   const calculateValuesWithPercent = (val) => {
-    setNetAmount(0);
-    setCgst(0);
-    setSgst(0);
-    setTotalAmount(0);
+      setNetAmount(0);
+      setCgst(0);
+      setSgst(0);
+      setTotalAmount(0);  
     // Parse the discount input as a float
     const discountValue = parseFloat(val) || 0;
     let netAmountValue;
@@ -36,7 +41,10 @@ const Section5 = ({ calculate, discount, setDiscount, netAmount, setNetAmount, c
     setTotalAmount(Math.round(totalAmountValue));
   }
 
-  
+  useEffect(() => {
+    calculateValuesWithPercent(discount)
+  }, [sec4])
+    
 
   const handleDiscountChange = (event) => {
     const newValue = event.target.value;

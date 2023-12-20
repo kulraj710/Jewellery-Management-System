@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import EditProductList from './EditProductList';
 
 const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
     const [values, setValues] = useState({})
@@ -9,10 +10,10 @@ const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
 
     useEffect(() => {
         calculateAutoFillValue()
-      }, [values.amt, values.lbr]);
+      }, [values.amt, values.lbr])
     useEffect(() => {
         calculateAutoFillValue1()
-      }, [values.net, values.rate]);
+      }, [values.net, values.rate])
 
       const calculateAutoFillValue = () => {
         const num1 = parseFloat(values.amt);
@@ -57,9 +58,8 @@ const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
 
 
     const handleChange = (e) => {
-        
         setValues(prev => ({...prev, [e.target.name] : e.target.value}))
-      };
+      }
 
       const addProduct = () => {
         setSec4(prev => [...prev, values])
@@ -68,9 +68,14 @@ const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
         console.log(total_to_show)
         setValues({sno: '', pd: '', hsn: '', pcs : '', gr : '', net : '', rate : '', amt : '', lbr : '', tval : 0})
       }
+
+
   return (
    <div>
      <div>
+      <div>
+        <EditProductList products={sec4} setSec4={setSec4} setCurrentAmt={setCurrentAmt} setCurrentTval={setCurrentTval} setCalculate={setCalculate}/>
+      </div>
         <div style={styles}>
         <div>
         <TextField required label="SR NO" value={values.sno} placeholder="SNO" type='number' name='sno' onChange={handleChange} style={{width : '140px'}}/>

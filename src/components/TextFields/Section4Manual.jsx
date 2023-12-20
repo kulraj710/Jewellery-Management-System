@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import EditProductListManual from './EditProductListManual';
 
 const Section4Manual = ({sec4, setSec4}) => {
     const [values, setValues] = useState({})
@@ -24,6 +25,9 @@ const Section4Manual = ({sec4, setSec4}) => {
   return (
    <div>
      <div>
+     <div>
+        <EditProductListManual products={sec4} setSec4={setSec4}/>
+      </div>
         <div style={styles}>
         <div>
         <TextField required label="SR NO" value={values.sno} placeholder="SNO" type='number' name='sno' onChange={handleChange} style={{width : '140px'}}/>

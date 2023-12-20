@@ -34,9 +34,9 @@ export default function ViewInvoiceDialog({open, setOpen, data, printRef, copyRe
         <DialogTitle>Invoice No. {data.invoiceNo}</DialogTitle>
         <DialogContent>
           {/* <Invoice/> */}
-           <Invoice ref={copyRef}  sec1={{invoice : data.invoiceNo, date : format(data.invoiceDate.toDate(), "dd-MM-yyyy")}} sec2={{invoiceType : data.invoiceType}} sec3={{ name : data.name, phone : data.phone, address : data.address, gstin : data.gstin, pan : data.pan }} sec4={data.productTable} discount={data.discount} netAmount={data.netAmt} cgst={data.cgst} sgst={data.sgst} payment={data.payment} totalAmount={data.totalAmt} />
+           <Invoice ref={copyRef}  sec1={{invoice : data.invoiceNo, date : format(data.invoiceDate.toDate(), "dd-MM-yyyy")}} sec2={{invoiceType : data.invoiceType}} sec3={{ name : data.name, phone : data.phone, address : data.address, gstin : data.gstin, pan : data.pan }} sec4={data.productTable} discount={data.discount} netAmount={data.netAmt} cgst={data.cgst} sgst={data.sgst} payment={data.payment} totalAmount={data.totalAmt} note={data.note}/>
           <div style={{display : 'none'}}>
-          <InvoiceWithoutBg ref={printRef} sec1={{invoice : data.invoiceNo, date : format(data.invoiceDate.toDate(), "dd-MM-yyyy")}} sec2={{invoiceType : data.invoiceType}} sec3={{ name : data.name, phone : data.phone, address : data.address, gstin : data.gstin, pan : data.pan }} sec4={data.productTable} discount={data.discount} netAmount={data.netAmt} cgst={data.cgst} sgst={data.sgst} payment={data.payment} totalAmount={data.totalAmt}/>
+          <InvoiceWithoutBg ref={printRef} sec1={{invoice : data.invoiceNo, date : format(data.invoiceDate.toDate(), "dd-MM-yyyy")}} sec2={{invoiceType : data.invoiceType}} sec3={{ name : data.name, phone : data.phone, address : data.address, gstin : data.gstin, pan : data.pan }} sec4={data.productTable} discount={data.discount} netAmount={data.netAmt} cgst={data.cgst} sgst={data.sgst} payment={data.payment} totalAmount={data.totalAmt} note={data.note}/>
           </div>
         </DialogContent>
         <DialogActions>

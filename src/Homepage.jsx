@@ -15,10 +15,10 @@ const Homepage = () => {
     let a = []
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data())
+      
       a.push(doc.data())
     })
-    setData(a)
+    setData(a.sort((k, m) => m.invoiceNo - k.invoiceNo))
     setLoading(false)
   }
 

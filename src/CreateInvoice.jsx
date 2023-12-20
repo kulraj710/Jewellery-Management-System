@@ -14,13 +14,14 @@ const CreateInvoice = () => {
   const [sec3, setSec3] = useState({})
   const [sec4, setSec4] = useState([])
   const [sec5, setSec5] = useState({})
-  const [calculate, setCalculate] = useState(0);
+  const [calculate, setCalculate] = useState({tvalTotal : 0});
   const [discount, setDiscount] = useState('');
   const [netAmount, setNetAmount] = useState(0);
   const [cgst, setCgst] = useState(0);
   const [sgst, setSgst] = useState(0);
   const [payment, setPayment] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [note, setNote] = useState('')
 
   // other states 
   const [isManualValues, setIsManualValues] = useState(false)
@@ -37,9 +38,9 @@ const CreateInvoice = () => {
         <div><Button variant="outlined" href="/">Go to Home</Button></div>
       </div>
    <div id='main-container'>
-          <div id='home-form'><FormContainer isManualValues={isManualValues} sec1={sec1} setSec1={setSec1} sec2={sec2} setSec2={setSec2} sec3={sec3} setSec3={setSec3} sec4={sec4} setSec4={setSec4} sec5={sec5} setSec5={setSec5} calculate={calculate} setCalculate={setCalculate} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount}/></div>
+          <div id='home-form'><FormContainer note={note} setNote={setNote} isManualValues={isManualValues} sec1={sec1} setSec1={setSec1} sec2={sec2} setSec2={setSec2} sec3={sec3} setSec3={setSec3} sec4={sec4} setSec4={setSec4} sec5={sec5} setSec5={setSec5} calculate={calculate} setCalculate={setCalculate} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount}/></div>
           
-          <div id='invoice-in-createInvoice'><Invoice sec1={sec1} setSec1={setSec1} sec2={sec2} setSec2={setSec2} sec3={sec3} setSec3={setSec3} sec4={sec4} setSec4={setSec4} sec5={sec5} setSec5={setSec5} calculate={calculate} setCalculate={setCalculate} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount} /></div>
+          <div id='invoice-in-createInvoice'><Invoice note={note} sec1={sec1} setSec1={setSec1} sec2={sec2} setSec2={setSec2} sec3={sec3} setSec3={setSec3} sec4={sec4} setSec4={setSec4} sec5={sec5} setSec5={setSec5} calculate={calculate} setCalculate={setCalculate} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount} /></div>
     </div>
     </>
   )

@@ -23,6 +23,7 @@ export default function Section2({sec2, setSec2}) {
           <MenuItem value={"Gold Tax Invoice"}>Gold Tax Invoice</MenuItem>
           <MenuItem value={"Silver Tax Invoice"}>Silver Tax Invoice</MenuItem>
           <MenuItem value={"Tax Invoice"}>Tax Invoice</MenuItem>
+          <MenuItem value={"ESTIMATE"}>ESTIMATE</MenuItem>
         </Select>
       </FormControl>
     </Box>

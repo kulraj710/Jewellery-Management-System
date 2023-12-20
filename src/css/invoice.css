@@ -154,6 +154,8 @@
 .notes{
     border : 1px solid black;
     width: 100%;
+    white-space: pre-line;
+    padding: 6px;
 }
 
 /* section 5 */

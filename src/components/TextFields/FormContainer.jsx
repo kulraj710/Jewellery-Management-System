@@ -12,6 +12,8 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import Section4Manual from "./Section4Manual";
 import Section5Manual from "./section5Manual";
+import TextArea from './TextArea';
+
 
 const FormContainer = ({
   isManualValues,
@@ -27,10 +29,14 @@ const FormContainer = ({
   setSec5,
   calculate,
   setCalculate,
-  discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst, payment, setPayment, totalAmount, setTotalAmount
+  discount, setDiscount, netAmount, setNetAmount, cgst, setCgst, sgst, setSgst, payment, setPayment, totalAmount, setTotalAmount,
+  setNote, note
 }) => {
 
-
+  const handleTextChange = (event) => {
+    setNote(`${event.target.value}`);
+  }
+  console.log(calculate)
   const router = useNavigate()
   const [loading, setLoading] = useState(false)
 
@@ -52,7 +58,8 @@ const FormContainer = ({
         pan: sec3.pan || "-",
         payment: payment,
         totalAmt: totalAmount,
-        productTable: sec4
+        productTable: sec4,
+        note: note
 
       })
       console.log("Document written with ID: ", docRef.id)
@@ -103,12 +110,28 @@ const FormContainer = ({
           <div className="step-number">5</div>
           {isManualValues ? "(Auto Fill Values = OFF)" : null}
         </div>
-        {isManualValues ? <Section5Manual calculate={calculate.tvalTotal} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount}/> : <Section5 calculate={calculate.tvalTotal} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />}
+        {isManualValues ? <Section5Manual calculate={calculate.tvalTotal} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount}/> : <Section5 calculate={calculate.tvalTotal} discount={discount} setDiscount={setDiscount} netAmount={netAmount} setNetAmount={setNetAmount} cgst={cgst} setCgst={setCgst} sgst={sgst} setSgst={setSgst} payment={payment} setPayment={setPayment} totalAmount={totalAmount} setTotalAmount={setTotalAmount} sec4={sec4}/>}
       </div>
 
 
-      <div className="step">
+    <div className="note-1">
+
+    <div className="step">
         <div className="step-number">6</div>
+        <div style={{ paddingBottom: '2rem' }}>
+
+        <div>
+      <h3>Notes</h3>
+          <TextArea label="Type something..." onChange={handleTextChange} value={note} />
+      </div>
+        </div>
+
+      </div>
+    </div>
+
+
+      <div className="step">
+        <div className="step-number">7</div>
         <div style={{ paddingLeft: '4rem' }}>
 
           <Button variant="contained" onClick={handlePrint}>{!loading ? "Create Invoice" : "creating..."}</Button>
