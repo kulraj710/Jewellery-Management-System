@@ -105,6 +105,14 @@ const ProductTable = ({sec4}) => {
       accessor: 'lbr',
     },
     {
+      Header: 'HUID Amt',
+      accessor : 'huid'
+    },
+    {
+      Header : 'O.Chrg',
+      accessor : 'ochrg'
+    },
+    {
       Header: 'Total Amount',
       accessor: 'tval',
     },

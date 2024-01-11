@@ -66,7 +66,7 @@ const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
         let total_to_show = calculateTotalTval([...sec4, values])
         setCalculate({tvalTotal : total_to_show})
         console.log(total_to_show)
-        setValues({sno: '', pd: '', hsn: '', pcs : '', gr : '', net : '', rate : '', amt : '', lbr : '', tval : 0})
+        setValues({sno: '', pd: '', hsn: '', pcs : '', gr : '', net : '', rate : '', amt : '', lbr : '', tval : 0, huid : '', ochrg : ''})
       }
 
 
@@ -115,6 +115,14 @@ const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
 
         <div>
         <TextField value={values.lbr} required label="Lbr Amt" name='lbr' onChange={handleChange} placeholder="Lbr Amt" />
+        </div>
+
+        <div>
+        <TextField value={values.huid} required label="Huid Amt" name='huid' onChange={handleChange} placeholder="HUID amt" />
+        </div>
+        {/* delete later, not tested */}
+        <div>
+        <TextField value={values.ochrg} required label="O. Charge" name='ochrg' onChange={handleChange} placeholder="O. Charge" />
         </div>
         <div>
         <TextField disabled value={(currentTval).toFixed(2)} label="Total Amount" name='tval' onChange={handleChange} />

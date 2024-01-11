@@ -20,7 +20,7 @@ const Section4Manual = ({sec4, setSec4}) => {
 
       const addProduct = () => {
         setSec4(prev => [...prev, values])
-        setValues({sno: '', pd: '', hsn: '', pcs : '', gr : '', net : '', rate : '', amt : '', lbr : '', tval : 0})
+        setValues({sno: '', pd: '', hsn: '', pcs : '', gr : '', net : '', rate : '', amt : '', lbr : '', tval : 0, huid : '', ochrg : ''})
       }
   return (
    <div>
@@ -67,6 +67,13 @@ const Section4Manual = ({sec4, setSec4}) => {
 
         <div>
         <TextField value={values.lbr} required label="Lbr Amt" name='lbr' onChange={handleChange} placeholder="Lbr Amt" />
+        </div>
+        <div>
+        <TextField value={values.huid} required label="Huid amt" name='huid' onChange={handleChange} placeholder="HUID Amt" />
+        </div>
+        {/* deleter later test */}
+        <div>
+        <TextField value={values.ochrg} required label="O. Charge" name='ochrg' onChange={handleChange} placeholder="O. Charge" />
         </div>
         <div>
         <TextField value={values.tval} label="Total Amount" name='tval' onChange={handleChange} />

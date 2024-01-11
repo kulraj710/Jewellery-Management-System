@@ -42,6 +42,9 @@ const ProductEditFormManual = ({ product, onSave, setOpen, open }) => {
         <TextField style={{margin : '10px'}} label="Rate" name="rate" value={editedProduct.rate} onChange={handleChange} />
         <TextField style={{margin : '10px'}} label="Amount" name="amt" value={editedProduct.amt} onChange={handleChange} />
         <TextField style={{margin : '10px'}} label="Lbr Amt" name="lbr" value={editedProduct.lbr} onChange={handleChange} />
+        <TextField style={{margin : '10px'}} label="HUID Amt" name="huid" value={editedProduct.huid} onChange={handleChange} />
+        {/* yet to test */}
+        <TextField style={{margin : '10px'}} label="O. Charge" name="ochrg" value={editedProduct.ochrg} onChange={handleChange} />
         <TextField style={{margin : '10px'}} label="Total Amount" name="tval" value={editedProduct.tval} onChange={handleChange} />
         </DialogContent>
         <DialogActions>

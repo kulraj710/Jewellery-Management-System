@@ -75,6 +75,9 @@ const ProductEditForm = ({ product, onSave, setOpen, open, setCurrentAmt, setCur
         <TextField style={{margin : '10px'}} label="Rate" name="rate" value={editedProduct.rate} onChange={handleChange} />
         <TextField style={{margin : '10px'}} disabled label="Amount" name="amt" value={editedProduct.amt} onChange={handleChange} />
         <TextField style={{margin : '10px'}} label="Lbr Amt" name="lbr" value={editedProduct.lbr} onChange={handleChange} />
+        <TextField style={{margin : '10px'}} label="HUID Amt" name="huid" value={editedProduct.huid} onChange={handleChange} />
+        {/* yet to test */}
+        <TextField style={{margin : '10px'}} label="O. Charge" name="ochrg" value={editedProduct.ochrg} onChange={handleChange} />
         <TextField style={{margin : '10px'}} disabled label="Total Amount" name="tval" value={editedProduct.tval} onChange={handleChange} />
         </DialogContent>
         <DialogActions>
