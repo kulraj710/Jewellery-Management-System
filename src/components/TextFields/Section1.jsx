@@ -43,12 +43,12 @@ const Section1 = ({sec1, setSec1}) => {
     <div>
 
 <TextField
-  required
-  // disabled
+  // required
+  disabled
   label="Invoice No"
   name='no'
   placeholder='Invoice No'
-  // helperText="This is auto-filled"
+  helperText="This is auto-filled, can not be edited."
   value={sec1.invoice}
   onChange={handleInputChange}
   type='number'

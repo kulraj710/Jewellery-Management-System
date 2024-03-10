@@ -16,24 +16,25 @@ const ProductEditForm = ({ product, onSave, setOpen, open, setCurrentAmt, setCur
   
     useEffect(() => {
         calculateAutoFillValue()
-      }, [editedProduct.amt, editedProduct.lbr])
+      }, [editedProduct.amt, editedProduct.lbr, editedProduct.huid, editedProduct.ochrg])
     useEffect(() => {
         calculateAutoFillValue1()
       }, [editedProduct.net, editedProduct.rate])
 
       const calculateAutoFillValue = () => {
-        const num1 = parseFloat(editedProduct.amt);
-        const num2 = parseFloat(editedProduct.lbr);
+        const amt = parseFloat(editedProduct.amt);
+        const lbr = parseFloat(editedProduct.lbr);
+        const huid = parseFloat(editedProduct.huid)
+        const ochrg = parseFloat(editedProduct.ochrg)
         
-        if (!isNaN(num1) && !isNaN(num2)) {
-            const b = Math.round((num1 + num2) * 0.97)
+        if (!isNaN(amt) && !isNaN(lbr) && !isNaN(huid) && !isNaN(ochrg)) {
+            const b = Math.round((amt + lbr + huid + ochrg))
             setCurrentTval(b)
             setEditedProduct(prev => ({...prev, tval : b}))
         } else {
             setCurrentTval(0);
         }
       }
-
       const calculateAutoFillValue1 = () => {
         const num1 = parseFloat(editedProduct.rate);
         const netw = parseFloat(editedProduct.net)
@@ -48,6 +49,14 @@ const ProductEditForm = ({ product, onSave, setOpen, open, setCurrentAmt, setCur
         }
       }
 
+
+    function calculateTotalTval(arr) {
+        let total = 0;
+        for (const val of arr) {
+            total += parseFloat(val.tval);
+        }
+        return total;
+      }
     const handleClose = () => {
         setOpen(false)
       };

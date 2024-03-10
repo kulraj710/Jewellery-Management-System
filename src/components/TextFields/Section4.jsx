@@ -4,30 +4,31 @@ import Button from '@mui/material/Button';
 import EditProductList from './EditProductList';
 
 const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
-    const [values, setValues] = useState({})
+    const [values, setValues] = useState({sno: '', pd: '', hsn: '', pcs : '', gr : '', net : 0, rate : 0, amt : 0, lbr : 0, tval : 0, huid : 0, ochrg : 0})
     const [currentTval, setCurrentTval] = useState(0)
     const [currentAmt, setCurrentAmt] = useState(0)
 
     useEffect(() => {
         calculateAutoFillValue()
-      }, [values.amt, values.lbr])
+      }, [values.amt, values.lbr, values.huid, values.ochrg])
     useEffect(() => {
         calculateAutoFillValue1()
       }, [values.net, values.rate])
 
       const calculateAutoFillValue = () => {
-        const num1 = parseFloat(values.amt);
-        const num2 = parseFloat(values.lbr);
+        const amt = parseFloat(values.amt);
+        const lbr = parseFloat(values.lbr);
+        const huid = parseFloat(values.huid)
+        const ochrg = parseFloat(values.ochrg)
         
-        if (!isNaN(num1) && !isNaN(num2)) {
-            const b = Math.round((num1 + num2) * 0.97)
+        if (!isNaN(amt) && !isNaN(lbr) && !isNaN(huid) && !isNaN(ochrg)) {
+            const b = Math.round((amt + lbr + huid + ochrg))
             setCurrentTval(b)
             setValues(prev => ({...prev, tval : b}))
         } else {
             setCurrentTval(0);
         }
       }
-
       const calculateAutoFillValue1 = () => {
         const num1 = parseFloat(values.rate);
         const netw = parseFloat(values.net)
@@ -66,7 +67,7 @@ const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
         let total_to_show = calculateTotalTval([...sec4, values])
         setCalculate({tvalTotal : total_to_show})
         console.log(total_to_show)
-        setValues({sno: '', pd: '', hsn: '', pcs : '', gr : '', net : '', rate : '', amt : '', lbr : '', tval : 0, huid : '', ochrg : ''})
+        setValues({sno: '', pd: '', hsn: '', pcs : '', gr : '', net : 0, rate : 0, amt : 0, lbr : 0, tval : 0, huid : 0, ochrg : 0})
       }
 
 
@@ -114,15 +115,15 @@ const Section4 = ({sec4, setSec4, calculate, setCalculate}) => {
         <div style={styles}>
 
         <div>
-        <TextField value={values.lbr} required label="Lbr Amt" name='lbr' onChange={handleChange} placeholder="Lbr Amt" />
+        <TextField value={values.lbr} required label="Lbr Amt" name='lbr' onChange={handleChange} placeholder="Lbr Amt" helperText={(values.lbr === "") ? "Lbr amt can't be empty" : null}/>
         </div>
 
         <div>
-        <TextField value={values.huid} required label="Huid Amt" name='huid' onChange={handleChange} placeholder="HUID amt" />
+        <TextField value={values.huid} helperText={(values.huid === "") ? "HUID can not be empty" : null} label="Huid Amt" name='huid' onChange={handleChange} placeholder="HUID amt" />
         </div>
         {/* delete later, not tested */}
         <div>
-        <TextField value={values.ochrg} required label="O. Charge" name='ochrg' onChange={handleChange} placeholder="O. Charge" />
+        <TextField value={values.ochrg} required label="O. Charge" name='ochrg' onChange={handleChange} placeholder="O. Charge" helperText={(values.ochrg === "") ? "O.charge can't be empty" : null}/>
         </div>
         <div>
         <TextField disabled value={(currentTval).toFixed(2)} label="Total Amount" name='tval' onChange={handleChange} />
