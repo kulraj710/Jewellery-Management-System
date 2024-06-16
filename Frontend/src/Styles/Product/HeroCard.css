@@ -1,0 +1,32 @@
+
+.statistics {
+    margin-bottom: 20px;
+}
+
+.stats-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.stats-card img {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+}
+
+.stats-info p {
+    margin-bottom: 10px;
+}
+
+.stats-info p button {
+    margin-left: 10px;
+    padding: 2px 5px;
+    background-color: #d4ab2a;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
