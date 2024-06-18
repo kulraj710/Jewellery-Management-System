@@ -3,20 +3,23 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProductPage from './Components/Product/ProductPage';
 import HomePage from './Components/Home/HomePage';
 import Navbar from './Layouts/Navbar';
+import Sidebar from './Layouts/Sidebar';
+import "./Styles/App.css"
 
 function App() {
   return (
-    <>
-  <Router>
-  <Navbar/>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/product" element={<ProductPage />} />
-        {/* <Route path="/page2" element={<Page2 />} />
-        <Route path="/page3" element={<Page3 />} /> */}
-      </Routes>
-    </Router>
-    </>
+      <Router>
+        <div className='app'>
+          <Sidebar />
+          <div className='home-content'>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/product" element={<ProductPage />} />
+            </Routes>
+          </div>
+        </div>
+      </Router>
   )
 }
 

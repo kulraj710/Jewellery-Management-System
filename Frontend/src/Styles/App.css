@@ -1,0 +1,8 @@
+/* App.jsx styles */
+.app {
+    display: flex;
+  }
+  
+  .home-content {
+    flex: 1;
+  }
