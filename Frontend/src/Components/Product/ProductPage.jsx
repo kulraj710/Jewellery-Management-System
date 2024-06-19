@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useContext} from 'react'
 import HeroCard from './HeroCard'
 import ProductCard from './ProductCard'
+import { ProductsContext } from '../../Context/ProductContext'
 
 const ProductPage = () => {
 
   // To-Do : [temp] : temporary styles, temp array
 
-  const tempNumberOfProducts = [1,2,3,4,5,6]
+  const { products } = useContext(ProductsContext)
 
   const styles = {
         margin : '3rem'
@@ -16,7 +17,7 @@ const ProductPage = () => {
   return (
     <div style={styles}>
       {/* Hero Card */}
-      <HeroCard/>
+      <HeroCard ProductCount={products.length}/>
 
       {/* Inventory */}
       <section className='listings'>
@@ -25,8 +26,8 @@ const ProductPage = () => {
 
         <div className='product-list'>
 
-          {tempNumberOfProducts.map((card) => (
-            <ProductCard key={card}/>
+          {products.map((card) => (
+            <ProductCard key={card.id} product={card}/>
           ))}
 
         </div>

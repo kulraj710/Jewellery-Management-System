@@ -5,7 +5,7 @@ import "../../Styles/Product/HeroCard.css"
 // To-Do : Implement Fetch Data from API 
 
 
-const HeroCard = () => {
+const HeroCard = ({ ProductCount }) => {
 
     const [showInventoryValue, setShowInventoryValue] = useState(false);
 
@@ -29,7 +29,7 @@ const HeroCard = () => {
                         <button id="hide-button" onClick={ToggleInventoryValue}>{showInventoryValue ? "Hide" : "Show"}</button>
                     </p>
 
-                    <p><strong>Total Unique Products:</strong> 12</p>
+                    <p><strong>Total Unique Products:</strong> {ProductCount} </p>
                 </div>
             </div>
         </section>
