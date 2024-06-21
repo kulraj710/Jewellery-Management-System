@@ -6,6 +6,7 @@ import Navbar from './Layouts/Navbar';
 import Sidebar from './Layouts/Sidebar';
 import "./Styles/App.css"
 import ProductsProvider from './Context/ProductContext';
+import ProductForm from './Components/Product/ProductForm';
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/product" element={<ProductPage />} />
+              <Route path="/product" element={<ProductPage/>} />
+              <Route path="/product/:id" element={<ProductForm/>} />
             </Routes>
           </div>
         </div>
