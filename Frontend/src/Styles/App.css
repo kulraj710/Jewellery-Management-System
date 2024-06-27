@@ -5,4 +5,5 @@
   
   .home-content {
     flex: 1;
+    margin-left: var(--sidebar-width);
   }
