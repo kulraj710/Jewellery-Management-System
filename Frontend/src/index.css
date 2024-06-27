@@ -4,3 +4,7 @@
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
+
+:root{
+  --sidebar-width : 300px;
+}
