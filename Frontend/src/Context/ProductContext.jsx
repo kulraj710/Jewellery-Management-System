@@ -3,15 +3,17 @@ import { useState, createContext } from "react"
 export const ProductsContext = createContext([])
 
 const ProductsProvider = ({ children }) => {
-    const [products, setProducts] = useState([{id : 1, name : 'prod 1'}, {id : 2, name : 'prod 2'}, {id : 3, name : 'prod 3'}])
+    const [products, setProducts] = useState([])
 
     const updateProducts = (newProducts) => {
-        setProducts((prev) => setProducts([...prev, newProducts]))
+        for (let i=0; i < newProducts.length; i++){
+            setProducts([...products, newProducts[i]])
+        }
     }
 
 
     return (
-        <ProductsContext.Provider value={{ products, updateProducts}}>
+        <ProductsContext.Provider value={{ products, setProducts, updateProducts}}>
             {children}
         </ProductsContext.Provider>
     )

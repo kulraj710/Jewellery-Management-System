@@ -1,13 +1,44 @@
-import React, { useContext} from 'react'
+import React, { useContext, useEffect, useState} from 'react'
 import HeroCard from './HeroCard'
 import ProductCard from './ProductCard'
 import { ProductsContext } from '../../Context/ProductContext'
+import { getItems } from "../../Helper/api"
 
 const ProductPage = () => {
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   // To-Do : [temp] : temporary styles, temp array
 
-  const { products } = useContext(ProductsContext)
+  const { products, setProducts, updateProducts } = useContext(ProductsContext)
+
+  // To-DO : make sure to add dependency to this array which will trigger the fetchData function
+  // so if new new data is supposed to be fetched, it will fetch it
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getItems('product/add'); 
+        console.log(data)
+
+        if (data.length > 0){
+          setProducts(data);
+        }
+
+      } catch (err) {
+        setError(err);
+
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (products < 1){
+      fetchData();
+    }
+  }, []);
+
 
   const styles = {
         margin : '3rem'
@@ -16,22 +47,27 @@ const ProductPage = () => {
 
   return (
     <div style={styles}>
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
       {/* Hero Card */}
-      <HeroCard ProductCount={products.length}/>
+      {!isLoading && <HeroCard ProductCount={products.length}/>}
 
       {/* Inventory */}
-      <section className='listings'>
 
-        <h3>My Inventory</h3>
+     {products.length > 0 && (
+       <section className='listings'>
 
-        <div className='product-list'>
+       <h3>My Inventory</h3>
 
-          {products.map((card) => (
-            <ProductCard key={card.id} product={card}/>
-          ))}
+       <div className='product-list'>
 
-        </div>
-      </section>
+         {products.map((card) => (
+           <ProductCard key={card.id} product={card}/>
+         ))}
+
+       </div>
+     </section>
+     )}
     </div>
   )
 }
