@@ -19,7 +19,7 @@ class Product(models.Model):
     discount = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     stock_quantity = models.IntegerField()
     supplier = models.CharField(max_length=255)
-    product_images = models.JSONField(default=list, blank=True, null=True)  # Assuming storing image URLs
+    product_image = models.ImageField(upload_to='product_images/', null=True)
     product_video = models.URLField(blank=True, null=True)
     certification_details = models.TextField(blank=True, null=True)
     warranty = models.BooleanField(default=False)
