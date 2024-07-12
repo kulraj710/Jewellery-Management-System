@@ -9,32 +9,32 @@ const ProductForm = () => {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        productName: '',
-        productCode: '',
+        product_name: '',
+        product_code: '',
         category: '',
         description: '',
         brand: '',
-        materialType: '',
+        material_type: '',
         purity: '',
         weight: '',
         gemstones: '',
-        designType: '',
+        design_type: '',
         size: '',
         customizable: false,
-        costPrice: '',
-        sellingPrice: '',
+        cost_price: '',
+        selling_price: '',
         discount: '',
-        stockQuantity: '',
+        stock_quantity: '',
         supplier: '',
         productImages: [],
-        productVideo: '',
-        certificationDetails: '',
+        product_video: '',
+        certification_details: '',
         warranty: false,
-        careInstructions: '',
-        productTags: '',
-        dateOfEntry: '',
-        enteredBy: '',
-        productStatus: 'Active',
+        care_instructions: '',
+        product_tags: '',
+        date_of_entry: '',
+        entered_by: '',
+        product_status: 'Active',
     });
 
     const [error, setError] = useState("");
@@ -84,11 +84,11 @@ const ProductForm = () => {
                 <section className='product-column1'>
                 <div className="form-group">
                     <label>Product Name</label>
-                    <input type="text" name="productName" value={formData.productName} onChange={handleChange} required />
+                    <input type="text" name="product_name" value={formData.product_name} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
                     <label>HSN Code</label>
-                    <input type="text" name="productCode" value={formData.productCode} onChange={handleChange} required />
+                    <input type="text" name="product_code" value={formData.product_code} onChange={handleChange} required />
                     <button>Enter Manually</button>
                 </div>
                 <div className="form-group">
@@ -106,7 +106,7 @@ const ProductForm = () => {
 
                 <div className="form-group">
                     <label>Material Type</label>
-                    <input type="text" name="materialType" value={formData.materialType} onChange={handleChange} required />
+                    <input type="text" name="material_type" value={formData.material_type} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
                     <label>Purity</label>
@@ -122,7 +122,7 @@ const ProductForm = () => {
                 </div>
                 <div className="form-group">
                     <label>Design Type</label>
-                    <input type="text" name="designType" value={formData.designType} onChange={handleChange} />
+                    <input type="text" name="design_type" value={formData.design_type} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label>Size</label>
@@ -137,11 +137,11 @@ const ProductForm = () => {
                 </div>
                 <div className="form-group">
                     <label>Cost Price</label>
-                    <input type="number" name="costPrice" value={formData.costPrice} onChange={handleChange} required />
+                    <input type="number" name="cost_price" value={formData.cost_price} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
                     <label>Selling Price</label>
-                    <input type="number" name="sellingPrice" value={formData.sellingPrice} onChange={handleChange} required />
+                    <input type="number" name="selling_price" value={formData.selling_price} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
                     <label>Discount</label>
@@ -149,7 +149,7 @@ const ProductForm = () => {
                 </div>
                 <div className="form-group">
                     <label>Stock Quantity</label>
-                    <input type="number" name="stockQuantity" value={formData.stockQuantity} onChange={handleChange} required />
+                    <input type="number" name="stock_quantity" value={formData.stock_quantity} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
                     <label>Supplier/Vendor Information</label>
@@ -173,23 +173,23 @@ const ProductForm = () => {
                 </div>
                 <div className="form-group">
                     <label>Care Instructions</label>
-                    <textarea name="careInstructions" value={formData.careInstructions} onChange={handleChange}></textarea>
+                    <textarea name="care_instructions" value={formData.care_instructions} onChange={handleChange}></textarea>
                 </div>
                 <div className="form-group">
                     <label>Product Tags/Keywords</label>
-                    <input type="text" name="productTags" value={formData.productTags} onChange={handleChange} />
+                    <input type="text" name="product_tags" value={formData.product_tags} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label>Date of Entry</label>
-                    <input type="date" name="dateOfEntry" value={formData.dateOfEntry} onChange={handleChange} required />
+                    <input type="date" name="date_of_entry" value={formData.date_of_entry} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
                     <label>Entered By (Staff Member)</label>
-                    <input type="text" name="enteredBy" value={formData.enteredBy} onChange={handleChange} required />
+                    <input type="text" name="entered_by" value={formData.entered_by} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
                     <label>Product Status</label>
-                    <select name="productStatus" value={formData.productStatus} onChange={handleChange}>
+                    <select name="product_status" value={formData.product_status} onChange={handleChange}>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
