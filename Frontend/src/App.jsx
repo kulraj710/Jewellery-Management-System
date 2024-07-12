@@ -7,6 +7,7 @@ import Sidebar from './Layouts/Sidebar';
 import "./Styles/App.css"
 import ProductsProvider from './Context/ProductContext';
 import ProductForm from './Components/Product/ProductForm';
+import ProductDetail from './Components/Product/ProductDetail';
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/product" element={<ProductPage/>} />
-              <Route path="/product/:id" element={<ProductForm/>} />
+              <Route path="/product/:id" element={<ProductDetail/>} />
+              <Route path="/product/new" element={<ProductForm/>} />
             </Routes>
           </div>
         </div>
