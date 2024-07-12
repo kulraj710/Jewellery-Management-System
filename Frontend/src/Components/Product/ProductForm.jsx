@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
 import ButtonComponent from '../../Layouts/ButtonComponent';
 import "../../Styles/Product/ProductForm.css"
+import { postItem } from '../../Helper/api';
 
 const ProductForm = () => {
     const { id } = useParams();
@@ -36,6 +37,9 @@ const ProductForm = () => {
         productStatus: 'Active',
     });
 
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false)
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
@@ -44,9 +48,20 @@ const ProductForm = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form Data:', formData);
+        try{
+            setLoading(true)
+            await postItem('product/add', formData)
+        }
+        catch (e){
+            console.error(e)
+            setError(e.toString())
+        }
+        finally{
+            setLoading(false)
+        }
     };
 
     const RedirectBackToProducts = () => {
