@@ -1,4 +1,5 @@
 import React from 'react'
+import AsyncSelect from './AsyncSelect';
 
 const ProductDetailForm = ({ setFormData, formData, isNewProduct = false }) => {
 
@@ -24,8 +25,9 @@ const ProductDetailForm = ({ setFormData, formData, isNewProduct = false }) => {
                 </div>
                 <div className="form-group">
                     <label>Category</label>
-                    <input type="text" name="category" value={formData.category} onChange={handleChange} required />
+                    <AsyncSelect display_access_key={'category_name'} NoDefaultOption={isNewProduct} DefaultSelectedValue={formData.category} endpoint={'products/categories/'} onChange={handleChange}/>
                 </div>
+
                 <div className="form-group">
                     <label>Description</label>
                     <textarea name="description" value={formData.description} onChange={handleChange} required></textarea>
@@ -37,7 +39,7 @@ const ProductDetailForm = ({ setFormData, formData, isNewProduct = false }) => {
 
                 <div className="form-group">
                     <label>Material Type</label>
-                    <input type="text" name="material_type" value={formData.material_type} onChange={handleChange} required />
+                    <AsyncSelect display_access_key={'material_type'} NoDefaultOption={isNewProduct} DefaultSelectedValue={formData.material_type} endpoint={'products/material-types/'} onChange={handleChange} required/>
                 </div>
                 <div className="form-group">
                     <label>Purity</label>
@@ -88,7 +90,7 @@ const ProductDetailForm = ({ setFormData, formData, isNewProduct = false }) => {
                 </div>
                 <div className="form-group">
                     <label>Supplier/Vendor Information</label>
-                    <input type="text" name="supplier" value={formData.supplier} onChange={handleChange} />
+                    <AsyncSelect display_access_key={'partner_name'} NoDefaultOption={isNewProduct} DefaultSelectedValue={formData.supplier} endpoint={'products/suppliers/'} onChange={handleChange}/>
                 </div>
                 <div className="form-group">
                     <label>Product Images</label>
@@ -120,13 +122,16 @@ const ProductDetailForm = ({ setFormData, formData, isNewProduct = false }) => {
                     <label>Product Tags/Keywords</label>
                     <input type="text" name="product_tags" value={formData.product_tags} onChange={handleChange} />
                 </div>
+
+                {/* TO-DO : need to handle, sql datetime field to be properly displayed here
+                currently, no date will be shown */}
                 <div className="form-group">
                     <label>Date of Entry</label>
                     <input type="date" name="date_of_entry" value={formData.date_of_entry} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
                     <label>Entered By (Staff Member)</label>
-                    <input type="text" name="entered_by" value={formData.entered_by} onChange={handleChange} required />
+                    <AsyncSelect display_access_key={'username'} NoDefaultOption={isNewProduct} DefaultSelectedValue={formData.entered_by} endpoint={'products/users/'} onChange={handleChange} required/>
                 </div>
                 <div className="form-group">
                     <label>Product Status</label>
