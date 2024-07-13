@@ -1,13 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../Styles/Layouts/Sidebar.css';
 
 const Sidebar = () => {
+
+  const navigate = useNavigate()
+
+  const navigateToNewProduct = () => {
+    navigate('/product/new')
+  }
+
   return (
     <div className="sidebar">
       <h2>Inventory Options</h2>
       <div className="sidebar-section">
         <div className='add-new-product'>
-          <button className='apply-button'>+ Add New</button>
+          <button className='apply-button' onClick={navigateToNewProduct}>+ Add New</button>
         </div>
         <h3>Sort By</h3>
         <div className="checkbox-group">
