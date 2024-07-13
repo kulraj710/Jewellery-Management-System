@@ -26,7 +26,7 @@ const ProductCard = ({ product }) => {
             <Badge addClass='product-gr-text' title={`Gr Wt : ${product.grweight} g`} bgcolor='lightgrey' color='black' border='2px solid lightgrey'/>
             <Badge addClass='product-nt-text' title={`Nt Wt : ${product.ntweight} g`} bgcolor='lightgrey' color='black' border='2px solid lightgrey'/>
             
-            <p id='product-category-text'><strong>{product.category}</strong></p>
+            <p id='product-category-text'><strong>{product.category.category_name}</strong></p>
           </div>
         </div>
       </Link>
