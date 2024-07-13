@@ -1,5 +1,7 @@
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from django.db import models 
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,8 +10,8 @@ from rest_framework import status
 from reportlab.lib.pagesizes import inch, A4
 from reportlab.pdfgen import canvas
 
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Product, ProductCategory, ProductMaterial, ProductSupplier, ProductUsers
+from .serializers import ProductSerializer, ProductCategorySerializer, ProductMaterialSerializer, ProductSupplierSerializer, ProductUsersSerializer
 
 
 
@@ -34,12 +36,12 @@ class ProductDetailView(APIView):
 
     def get_object(self, pk):
         try:
-            return Product.objects.get(pk=pk)
+            return Product.objects.select_related('category', 'entered_by', 'supplier', 'material_type').get(pk=pk)
         except Product.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        product = self.get_object(pk)
+        product = self.get_object(pk=pk)
         serializer = ProductSerializer(product)
         return Response(serializer.data)
     
@@ -56,6 +58,36 @@ class ProductDetailView(APIView):
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
         
+
+class ProductCategoryListView(APIView):
+    def get(self, request, format=None):
+        categories = ProductCategory.objects.all()
+        serializer = ProductCategorySerializer(categories, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class ProductMaterialTypeListView(APIView):
+    def get(self, request, format=None):
+        material_types = ProductMaterial.objects.all()
+        serializer = ProductMaterialSerializer(material_types, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class ProductSupplierListView(APIView):
+    def get(self, request, format=None):
+        suppliers = ProductSupplier.objects.all()
+        serializer = ProductSupplierSerializer(suppliers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class ProductUsersListView(APIView):
+    def get(self, request, format=None):
+        users = ProductUsers.objects.all()
+        serializer = ProductUsersSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+
 
 
 def generate_label(request, product_id):
