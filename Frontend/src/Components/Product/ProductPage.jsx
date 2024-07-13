@@ -3,13 +3,13 @@ import HeroCard from './HeroCard'
 import ProductCard from './ProductCard'
 import { ProductsContext } from '../../Context/ProductContext'
 import { getItems } from "../../Helper/api"
+import SearchBar from '../../Layouts/SearchBar'
 
 const ProductPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // To-Do : [temp] : temporary styles, temp array
 
   const { products, setProducts, updateProducts } = useContext(ProductsContext)
 
@@ -49,8 +49,13 @@ const ProductPage = () => {
     <div style={styles}>
       {isLoading && <p>Loading...</p>}
       {error && <p>Error: {error.message}</p>}
+
+      {/* Searchbar */}
+      {<SearchBar/>}
+
       {/* Hero Card */}
-      {!isLoading && <HeroCard ProductCount={products.length}/>}
+      {/* To-DO : Temporarily hidden from UI, as styling and positioning of this component needs to be figured for proper UI-UX */}
+      {/* {!isLoading && <HeroCard ProductCount={products.length}/>} */}
 
       {/* Inventory */}
 
