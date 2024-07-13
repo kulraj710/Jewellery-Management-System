@@ -24,4 +24,8 @@ dist-ssr
 *.sln
 *.sw?
 
+# ignore any migrations
 Backend/*/migrations/*
+
+# ignore uploaded product images
+Backend/product_images/*
