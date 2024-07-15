@@ -28,3 +28,14 @@ export const postItem = async (endpoint, data) => {
     throw error;
   }
 };
+
+export const putItem = async (endpoint, data) => {
+  try{
+    const response = await api.patch(endpoint, data)  ;
+    return response.data;
+  }
+  catch (error) {
+    console.error('Error updating data:', error);
+    throw error;
+  }
+}
