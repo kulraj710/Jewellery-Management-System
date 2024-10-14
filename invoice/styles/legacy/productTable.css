@@ -1,0 +1,22 @@
+.tableContainer {
+  font-size: 3mm !important;
+  width: calc(18.7cm - 0.7cm);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 7.42cm;
+  overflow-y: auto;
+}
+
+#lastCell:last-child {
+  border-bottom: 1px solid black !important;
+}
+
+#product-table-invoice td {
+  border: 1px solid black;
+  border-top: none;
+}
+
+/* Table Container */
+/* Table container */
