@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jewellery Management ERP System
 
-## Getting Started
+## Table of Contents
+- [Project Goal](#project-goal)
+- [Scope of the Project](#scope-of-the-project)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Learnings](#learnings)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-First, run the development server:
+## Project Goal
+The goal of this project is to develop a comprehensive ERP system tailored for jewellery shops. The system enables shop owners to manage their products, create invoices, track inventory, and maintain purchase history efficiently. This tool aims to automate and streamline the business processes, reducing manual work and enhancing productivity.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Scope of the Project
+The Jewellery Management ERP System covers the following aspects:
+- Product management: Adding, editing, and deleting products.
+- Invoice generation: Creating and managing customer invoices.
+- Inventory tracking: Monitoring stock levels and inventory movements.
+- Purchase history: Recording and viewing purchase transactions.
+- User management: Role-based access control for different users.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
+- **Product Management:** 
+  - Add new products with details such as name, category, price, and quantity.
+  - Edit or delete existing products.
+  - View all products in a list or grid format.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Invoice Management:** 
+  - Generate invoices for customer purchases.
+  - Print or email invoices directly from the system.
+  - Track paid and unpaid invoices.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Inventory Tracking:** 
+  - Real-time updates on inventory levels.
+  - Alerts for low stock levels.
+  - Detailed inventory reports.
 
-## Learn More
+- **Purchase History:** 
+  - Record all purchase transactions.
+  - View detailed purchase history with dates and amounts.
+  - Filter and search through purchase records.
 
-To learn more about Next.js, take a look at the following resources:
+- **User Management:** 
+  - Admin and user roles with different access permissions.
+  - Secure login and authentication system.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technologies Used
+- **Frontend:** ReactJS
+- **Backend:** Django
+- **Database:** PostgreSQL
+- **Hosting:** AWS
+- **Other:** AWS RDS for database hosting
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Learnings
+Through the development of this ERP system, I gained valuable insights and hands-on experience in:
+- Integrating frontend (ReactJS) with backend (Django).
+- Designing and implementing RESTful APIs.
+- Managing and querying a PostgreSQL database.
+- Deploying applications on AWS and using AWS RDS for database management.
+- Implementing role-based access control and authentication.
+- Enhancing UI/UX for better user experience.
