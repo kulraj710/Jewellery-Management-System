@@ -37,6 +37,7 @@ const ProductDetailsCard = ({
   invoiceData,
   setDiscount,
   setTotalToShow,
+  isUpdate
 }: any) => {
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [newProduct, setNewProduct] = useState(newProductInitialObject);
@@ -47,6 +48,13 @@ const ProductDetailsCard = ({
   useEffect(() => {
     calculateAutoFillValue1();
   }, [newProduct.net, newProduct.rate]);
+
+  useEffect(() => {
+    if (isUpdate){
+      let tval = calculateTotalTval(products);
+      setTotalToShow(tval);
+    }
+  }, [isUpdate])
 
   const calculateAutoFillValue = () => {
     const amt = parseFloat(newProduct.amt.toString());
@@ -361,7 +369,7 @@ const ProductDetailsCard = ({
             </TableHeader>
             <TableBody>
               {products.map((product: any) => (
-                <TableRow key={product.id} className="bg-gray-100">
+                <TableRow key={`${product.hsn}-${product.net}`} className="bg-gray-100">
                   <TableCell>{product.pd}</TableCell>
                   <TableCell>{product.net}</TableCell>
                   <TableCell>{product.tval}</TableCell>

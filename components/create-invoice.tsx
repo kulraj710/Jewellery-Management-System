@@ -64,11 +64,11 @@ export function CreateInvoiceComponent({
   const [invoiceData, setInvoiceData] = useState(invoiceDataState);
   const [invoiceDate, setInvoiceDate] = useState(new Date());
 
-  const [cgst, setCgst] = useState(0)
-  const [sgst, setSgst] = useState(0)
-  const [discount, setDiscount] = useState("")
-  const [netAmount, setNetAmount] = useState(0)
-  const [finalAmount, setFinalAmount] = useState(0)
+  const [cgst, setCgst] = useState(invoiceDataState.cgst)
+  const [sgst, setSgst] = useState(invoiceDataState.sgst)
+  const [discount, setDiscount] = useState(invoiceDataState.discount)
+  const [netAmount, setNetAmount] = useState(invoiceDataState.netAmt)
+  const [finalAmount, setFinalAmount] = useState(invoiceDataState.totalAmt)
   const [totalToShow, setTotalToShow] = useState(0)
 
   const updateInvoice = async () => {
@@ -80,18 +80,18 @@ export function CreateInvoiceComponent({
       const updatedData = {
         invoiceType: invoiceData.invoiceType,
         address: invoiceData.address || "",
-        cgst: invoiceData.cgst,
-        sgst: invoiceData.sgst,
-        discount: invoiceData.discount || 0,
+        cgst: cgst,
+        sgst: sgst,
+        discount: discount || 0,
         gstin: invoiceData.gstin || "",
         invoiceDate: invoiceDate,
         invoiceNo: invoiceData.invoiceNo || 0,
         name: invoiceData.name || "NO NAME GIVEN",
-        phone: invoiceData.phone || "-",
-        netAmt: invoiceData.netAmt,
-        pan: invoiceData.pan || "-",
+        phone: invoiceData.phone || "",
+        netAmt: netAmount,
+        pan: invoiceData.pan || "",
         payment: invoiceData.payment,
-        totalAmt: invoiceData.totalAmt,
+        totalAmt: finalAmount,
         productTable: products,
         note: invoiceData.note,
       };
@@ -183,6 +183,7 @@ export function CreateInvoiceComponent({
                   <div className="space-y-2">
                     <Label htmlFor="invoiceType">Invoice Type</Label>
                     <Select
+                      value={invoiceData.invoiceType}
                       onValueChange={(value) =>
                         setInvoiceData({ ...invoiceData, invoiceType: value })
                       }
@@ -209,7 +210,7 @@ export function CreateInvoiceComponent({
                 <PersonalInformationCard invoiceData={invoiceData} setInvoiceData={setInvoiceData}/>
 
                 {/* Product Details */}
-                <ProductDetailsCard setDiscount={setDiscount} products={products} setProducts={setProducts} setInvoiceData={setInvoiceData} invoiceData={invoiceData} setFinalAmount={setFinalAmount} setNetAmount={setNetAmount} finalAmount={finalAmount} netAmount={netAmount} setTotalToShow={setTotalToShow}/>
+                <ProductDetailsCard setDiscount={setDiscount} products={products} setProducts={setProducts} setInvoiceData={setInvoiceData} invoiceData={invoiceData} setFinalAmount={setFinalAmount} setNetAmount={setNetAmount} finalAmount={finalAmount} netAmount={netAmount} setTotalToShow={setTotalToShow} isUpdate={isUpdate}/>
 
                 {/* Billing details */}
                 <BillingCard cgst={cgst} sgst={sgst} discount={discount} setDiscount={setDiscount} setCgst={setCgst} setSgst={setSgst} invoiceData={invoiceData} setInvoiceData={setInvoiceData} setFinalAmount={setFinalAmount} setNetAmount={setNetAmount} finalAmount={finalAmount} netAmount={netAmount} totalToShow={totalToShow}/>
