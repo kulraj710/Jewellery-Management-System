@@ -13,36 +13,40 @@ import { Label } from "@/components/ui/label";
 
 const BillingCard = ({invoiceData, setInvoiceData, cgst, sgst, setSgst, setCgst, discount, setDiscount, netAmount, setNetAmount, finalAmount, setFinalAmount, totalToShow} : any) => {
 
-  const calculateValuesWithPercent = (val : any) => {
-    setCgst(0)
-    setSgst(0)
-    setNetAmount(0)
-    setFinalAmount(0)
-      
-  // Parse the discount input as a float
-  const discountValue = parseFloat(val) || 0;
-  let netAmountValue;
-  if (!val.endsWith('%')){
+  const calculateValuesWithPercent = (val: any = "") => {
+    setCgst(0);
+    setSgst(0);
+    setNetAmount(0);
+    setFinalAmount(0);
+  
+    // Ensure `val` is a string
+    const valStr = String(val).trim(); 
+  
+    // Parse the discount input as a float
+    const discountValue = parseFloat(valStr) || 0;
+    let netAmountValue;
+  
+    if (!valStr.endsWith("%")) {
       // Calculate the net amount
-      netAmountValue = totalToShow - discountValue
-  }
-  else{
-      netAmountValue = totalToShow - (totalToShow * (discountValue/100));
-  }
-
-  // Calculate CGST and SGST (1.5% of net amount)
-  const cgstValue = (netAmountValue * 1.5) / 100;
-  const sgstValue = (netAmountValue * 1.5) / 100;
-
-  // Calculate the total amount
-  const totalAmountValue = netAmountValue + cgstValue + sgstValue;
-
-  // Update state with the calculated values
-  setNetAmount(netAmountValue.toFixed(2));
-  setCgst(cgstValue.toFixed(2));
-  setSgst(sgstValue.toFixed(2));
-  setFinalAmount(totalAmountValue.toFixed(2));
-}
+      netAmountValue = totalToShow - discountValue;
+    } else {
+      netAmountValue = totalToShow - (totalToShow * (discountValue / 100));
+    }
+  
+    // Calculate CGST and SGST (1.5% of net amount)
+    const cgstValue = (netAmountValue * 1.5) / 100;
+    const sgstValue = (netAmountValue * 1.5) / 100;
+  
+    // Calculate the total amount
+    const totalAmountValue = netAmountValue + cgstValue + sgstValue;
+  
+    // Update state with the calculated values
+    setNetAmount(netAmountValue.toFixed(2));
+    setCgst(cgstValue.toFixed(2));
+    setSgst(sgstValue.toFixed(2));
+    setFinalAmount(totalAmountValue.toFixed(2));
+  };
+  
 
 useEffect(() => {
   calculateValuesWithPercent(discount);
