@@ -100,7 +100,7 @@ export default function OrderDetailsPage() {
 
       showToast.success("Order deleted", "The order has been deleted successfully.")
 
-      router.push("/orders")
+      router.push("/cash-ledger/orders")
     } catch (error) {
       showToast.error("Error", "Failed to delete order. Please try again.")
     }
@@ -129,7 +129,7 @@ export default function OrderDetailsPage() {
       <div className="flex flex-col items-center justify-center h-[50vh] gap-4">
         <h1 className="text-2xl font-bold">Order not found</h1>
         <p className="text-muted-foreground">The order you are looking for does not exist.</p>
-        <Button onClick={() => router.push("/orders")}>
+        <Button onClick={() => router.push("/cash-ledger/orders")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Orders
         </Button>

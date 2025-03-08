@@ -1,9 +1,24 @@
 "use client"
 
-// This is a mock implementation of Firebase services
-// Replace with actual Firebase implementation when ready
-
 import { useEffect, useState } from "react"
+import { db } from "@/firebase"
+// import { initializeApp } from "firebase/app"
+
+import { 
+  collection, 
+  doc, 
+  getDocs, 
+  getDoc, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  query, 
+  where, 
+  orderBy, 
+  serverTimestamp, 
+  Timestamp,
+  onSnapshot
+} from "firebase/firestore"
 
 // Types
 export interface Customer {
@@ -38,381 +53,533 @@ export interface Transaction {
   createdAt: Date
 }
 
-// Mock data
-const customers: Customer[] = [
-  {
-    id: "c1",
-    profileNumber: "001",
-    name: "John Doe",
-    phone: "123-456-7890",
-    address: "123 Main St, City",
-    notes: "Regular customer",
-    createdAt: new Date("2023-01-15"),
-  },
-  {
-    id: "c2",
-    profileNumber: "002",
-    name: "Jane Smith",
-    phone: "987-654-3210",
-    address: "456 Oak Ave, Town",
-    createdAt: new Date("2023-02-20"),
-  },
-  {
-    id: "c3",
-    profileNumber: "003",
-    name: "Robert Johnson",
-    phone: "555-123-4567",
-    address: "789 Pine Rd, Village",
-    notes: "Prefers email communication",
-    createdAt: new Date("2023-03-10"),
-  },
-]
+// Initialize Firebase
+// Replace with your Firebase configuration
+// const firebaseConfig = {
+//   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+//   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+//   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+//   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+//   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+//   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+// };
 
-const orders: Order[] = [
-  {
-    id: "o1",
-    customerId: "c1",
-    customerName: "John Doe",
-    totalAmount: 1500,
-    receivedAmount: 1000,
-    pendingAmount: 500,
-    status: "active",
-    notes: "Partial payment received",
-    createdAt: new Date("2023-04-05"),
-  },
-  {
-    id: "o2",
-    customerId: "c2",
-    customerName: "Jane Smith",
-    totalAmount: 2000,
-    receivedAmount: 2000,
-    pendingAmount: 0,
-    status: "closed",
-    createdAt: new Date("2023-04-10"),
-  },
-  {
-    id: "o3",
-    customerId: "c3",
-    customerName: "Robert Johnson",
-    totalAmount: 3000,
-    receivedAmount: 1500,
-    pendingAmount: 1500,
-    status: "active",
-    notes: "50% paid upfront",
-    createdAt: new Date("2023-04-15"),
-  },
-  {
-    id: "o4",
-    customerId: "c1",
-    customerName: "John Doe",
-    totalAmount: 800,
-    receivedAmount: 0,
-    pendingAmount: 800,
-    status: "active",
-    createdAt: new Date("2023-04-20"),
-  },
-]
+// Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// const db = getFirestore(app);
 
-let transactions: Transaction[] = [
-  {
-    id: "t1",
-    orderId: "o1",
-    customerId: "c1",
-    amount: 1000,
-    type: "incoming",
-    notes: "Initial payment",
-    createdAt: new Date("2023-04-05"),
-  },
-  {
-    id: "t2",
-    orderId: "o2",
-    customerId: "c2",
-    amount: 2000,
-    type: "incoming",
-    notes: "Full payment",
-    createdAt: new Date("2023-04-10"),
-  },
-  {
-    id: "t3",
-    orderId: "o3",
-    customerId: "c3",
-    amount: 1500,
-    type: "incoming",
-    notes: "Deposit",
-    createdAt: new Date("2023-04-15"),
-  },
-  {
-    id: "t4",
-    orderId: "o1",
-    customerId: "c1",
-    amount: 200,
-    type: "outgoing",
-    notes: "Refund for damaged item",
-    createdAt: new Date("2023-04-18"),
-  },
-]
+// Helper function to convert Firestore data to our types
+const convertTimestampToDate = (data: any) => {
+  const result = { ...data };
+  
+  if (result.createdAt && result.createdAt instanceof Timestamp) {
+    result.createdAt = result.createdAt.toDate();
+  }
+  
+  return result;
+};
 
-// Mock Firebase functions
+// Real Firebase functions
 export const firestore = {
   // Customers
   getCustomers: async (): Promise<Customer[]> => {
-    return [...customers].sort((a, b) => a.name.localeCompare(b.name))
+    const customersRef = collection(db, "customers");
+    const customersQuery = query(customersRef, orderBy("name"));
+    const snapshot = await getDocs(customersQuery);
+    
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...convertTimestampToDate(doc.data())
+    } as Customer));
   },
 
   getCustomerById: async (id: string): Promise<Customer | null> => {
-    return customers.find((c) => c.id === id) || null
+    const docRef = doc(db, "customers", id);
+    const docSnap = await getDoc(docRef);
+    
+    if (!docSnap.exists()) return null;
+    
+    return {
+      id: docSnap.id,
+      ...convertTimestampToDate(docSnap.data())
+    } as Customer;
   },
 
   addCustomer: async (customer: Omit<Customer, "id" | "profileNumber" | "createdAt">): Promise<Customer> => {
-    const newCustomer: Customer = {
-      id: `c${customers.length + 1}`,
-      profileNumber: String(customers.length + 1).padStart(3, "0"),
+    // Get current count of customers for profile number
+    const customersRef = collection(db, "customers");
+    const snapshot = await getDocs(customersRef);
+    const profileNumber = String(snapshot.size + 1).padStart(3, "0");
+    
+    const customerData = {
       ...customer,
-      createdAt: new Date(),
-    }
-    customers.push(newCustomer)
-    return newCustomer
+      profileNumber,
+      createdAt: serverTimestamp()
+    };
+    
+    const docRef = await addDoc(collection(db, "customers"), customerData);
+    
+    // Get the newly created document to return
+    const newDoc = await getDoc(docRef);
+    
+    return {
+      id: docRef.id,
+      ...convertTimestampToDate(newDoc.data() || {})
+    } as Customer;
   },
 
   updateCustomer: async (id: string, data: Partial<Customer>): Promise<Customer> => {
-    const index = customers.findIndex((c) => c.id === id)
-    if (index === -1) throw new Error("Customer not found")
-
-    const updatedCustomer = { ...customers[index], ...data }
-    customers[index] = updatedCustomer
-    return updatedCustomer
+    const customerRef = doc(db, "customers", id);
+    
+    // Remove id from data if it exists
+    const { id: _, ...updateData } = data;
+    
+    await updateDoc(customerRef, updateData);
+    
+    // Get the updated document
+    const updatedDoc = await getDoc(customerRef);
+    
+    if (!updatedDoc.exists()) {
+      throw new Error("Customer not found");
+    }
+    
+    return {
+      id: updatedDoc.id,
+      ...convertTimestampToDate(updatedDoc.data())
+    } as Customer;
   },
 
   // Orders
   getOrders: async (): Promise<Order[]> => {
-    return [...orders].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    const ordersRef = collection(db, "orders");
+    const ordersQuery = query(ordersRef, orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(ordersQuery);
+    
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...convertTimestampToDate(doc.data())
+    } as Order));
   },
 
   getOrdersByCustomerId: async (customerId: string): Promise<Order[]> => {
-    return orders
-      .filter((o) => o.customerId === customerId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    const ordersRef = collection(db, "orders");
+    const ordersQuery = query(
+      ordersRef, 
+      where("customerId", "==", customerId),
+      orderBy("createdAt", "desc")
+    );
+    const snapshot = await getDocs(ordersQuery);
+    console.log("SNAPSHOT from getOrdersByCustomerId : ", snapshot.docs);
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...convertTimestampToDate(doc.data())
+    } as Order));
   },
 
   getOrderById: async (id: string): Promise<Order | null> => {
-    return orders.find((o) => o.id === id) || null
+    const docRef = doc(db, "orders", id);
+    const docSnap = await getDoc(docRef);
+    
+    if (!docSnap.exists()) return null;
+    
+    return {
+      id: docSnap.id,
+      ...convertTimestampToDate(docSnap.data())
+    } as Order;
   },
 
   addOrder: async (
     order: Omit<Order, "id" | "receivedAmount" | "pendingAmount" | "status" | "createdAt">,
   ): Promise<Order> => {
-    const newOrder: Order = {
-      id: `o${orders.length + 1}`,
+    const orderData = {
       ...order,
+      customerId: String(order.customerId), // Explicit conversion to string
       receivedAmount: 0,
       pendingAmount: order.totalAmount,
       status: "active",
-      createdAt: new Date(),
-    }
-    orders.push(newOrder)
-    return newOrder
+      createdAt: serverTimestamp()
+    };
+    
+    console.log("Adding order with data:", orderData);
+    
+    const docRef = await addDoc(collection(db, "orders"), orderData);
+    
+    // Get the newly created document
+    const newDoc = await getDoc(docRef);
+    
+    return {
+      id: docRef.id,
+      ...convertTimestampToDate(newDoc.data() || {})
+    } as Order;
   },
 
   updateOrder: async (id: string, data: Partial<Order>): Promise<Order> => {
-    const index = orders.findIndex((o) => o.id === id)
-    if (index === -1) throw new Error("Order not found")
-
-    const updatedOrder = { ...orders[index], ...data }
-    orders[index] = updatedOrder
-    return updatedOrder
+    const orderRef = doc(db, "orders", id);
+    
+    // Remove id from data if it exists
+    const { id: _, ...updateData } = data;
+    
+    await updateDoc(orderRef, updateData);
+    
+    // Get the updated document
+    const updatedDoc = await getDoc(orderRef);
+    
+    if (!updatedDoc.exists()) {
+      throw new Error("Order not found");
+    }
+    
+    return {
+      id: updatedDoc.id,
+      ...convertTimestampToDate(updatedDoc.data())
+    } as Order;
   },
 
   deleteOrder: async (id: string): Promise<void> => {
-    const index = orders.findIndex((o) => o.id === id)
-    if (index === -1) throw new Error("Order not found")
-
-    orders.splice(index, 1)
-    // Also delete related transactions
-    transactions = transactions.filter((t) => t.orderId !== id)
+    // First delete related transactions
+    const transactionsRef = collection(db, "transactions");
+    const transactionsQuery = query(transactionsRef, where("orderId", "==", id));
+    const snapshot = await getDocs(transactionsQuery);
+    
+    // Delete each transaction
+    const deletePromises = snapshot.docs.map(doc => 
+      deleteDoc(doc.ref)
+    );
+    await Promise.all(deletePromises);
+    
+    // Then delete the order
+    await deleteDoc(doc(db, "orders", id));
   },
 
   // Transactions
   getTransactions: async (): Promise<Transaction[]> => {
-    return [...transactions].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    const transactionsRef = collection(db, "transactions");
+    const transactionsQuery = query(transactionsRef, orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(transactionsQuery);
+    
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...convertTimestampToDate(doc.data())
+    } as Transaction));
   },
 
   getTransactionsByOrderId: async (orderId: string): Promise<Transaction[]> => {
-    return transactions
-      .filter((t) => t.orderId === orderId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    const transactionsRef = collection(db, "transactions");
+    const transactionsQuery = query(
+      transactionsRef, 
+      where("orderId", "==", orderId),
+      orderBy("createdAt", "desc")
+    );
+    const snapshot = await getDocs(transactionsQuery);
+    console.log("snapshpt transactions :", snapshot.docs)
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...convertTimestampToDate(doc.data())
+    } as Transaction));
   },
 
   getTransactionsByCustomerId: async (customerId: string): Promise<Transaction[]> => {
-    return transactions
-      .filter((t) => t.customerId === customerId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    const transactionsRef = collection(db, "transactions");
+    const transactionsQuery = query(
+      transactionsRef, 
+      where("customerId", "==", customerId),
+      orderBy("createdAt", "desc")
+    );
+    const snapshot = await getDocs(transactionsQuery);
+    
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...convertTimestampToDate(doc.data())
+    } as Transaction));
   },
 
   addTransaction: async (transaction: Omit<Transaction, "id" | "createdAt">): Promise<Transaction> => {
-    const newTransaction: Transaction = {
-      id: `t${transactions.length + 1}`,
-      ...transaction,
-      createdAt: new Date(),
-    }
-    transactions.push(newTransaction)
-
-    // Update order amounts
-    const orderIndex = orders.findIndex((o) => o.id === transaction.orderId)
-    if (orderIndex !== -1) {
-      const order = orders[orderIndex]
+    try {
+      // Ensure customerId is a string
+      const transactionData = {
+        ...transaction,
+        customerId: String(transaction.customerId), // Explicit conversion to string
+        createdAt: serverTimestamp()
+      };
+      
+      console.log("Adding transaction with data:", transactionData);
+      
+      const docRef = await addDoc(collection(db, "transactions"), transactionData);
+      
+      // Get the order to update
+      const orderRef = doc(db, "orders", transaction.orderId);
+      const orderSnap = await getDoc(orderRef);
+      
+      if (!orderSnap.exists()) {
+        throw new Error("Order not found");
+      }
+      
+      const orderData = orderSnap.data() as Order;
+      let newReceivedAmount = orderData.receivedAmount;
+      let newPendingAmount = orderData.pendingAmount;
+      
       if (transaction.type === "incoming") {
-        order.receivedAmount += transaction.amount
-        order.pendingAmount -= transaction.amount
+        newReceivedAmount += transaction.amount;
+        newPendingAmount -= transaction.amount;
       } else {
-        order.receivedAmount -= transaction.amount
-        order.pendingAmount += transaction.amount
+        newReceivedAmount -= transaction.amount;
+        newPendingAmount += transaction.amount;
       }
-
-      // Update order status if fully paid
-      if (order.pendingAmount <= 0) {
-        order.status = "closed"
-      } else {
-        order.status = "active"
-      }
+      
+      const newStatus = newPendingAmount <= 0 ? "closed" : "active";
+      
+      await updateDoc(orderRef, {
+        receivedAmount: newReceivedAmount,
+        pendingAmount: newPendingAmount,
+        status: newStatus
+      });
+      
+      const newTransDoc = await getDoc(docRef);
+      
+      return {
+        id: docRef.id,
+        ...convertTimestampToDate(newTransDoc.data() || {})
+      } as Transaction;
+    } catch (error) {
+      console.error("Error adding transaction:", error);
+      throw error;
     }
-
-    return newTransaction
   },
 }
 
-// Custom hooks for real-time updates
+// Custom hooks for real-time updates using Firestore listeners
 export function useCustomers() {
-  const [data, setData] = useState<Customer[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [data, setData] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await firestore.getCustomers()
-        setData(result)
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error(String(err)))
-      } finally {
-        setLoading(false)
+    const customersRef = collection(db, "customers");
+    const customersQuery = query(customersRef, orderBy("name"));
+    
+    const unsubscribe = onSnapshot(
+      customersQuery,
+      (snapshot) => {
+        const customers = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...convertTimestampToDate(doc.data())
+        })) as Customer[];
+        
+        setData(customers);
+        setLoading(false);
+      },
+      (err) => {
+        setError(err instanceof Error ? err : new Error(String(err)));
+        setLoading(false);
       }
-    }
+    );
+    
+    return () => unsubscribe();
+  }, []);
 
-    fetchData()
-
-    // In a real implementation, this would be a Firestore listener
-    const interval = setInterval(fetchData, 5000)
-    return () => clearInterval(interval)
-  }, [])
-
-  return { data, loading, error }
+  return { data, loading, error, setData };
 }
 
 export function useOrders() {
-  const [data, setData] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [data, setData] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await firestore.getOrders()
-        setData(result)
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error(String(err)))
-      } finally {
-        setLoading(false)
+    const ordersRef = collection(db, "orders");
+    const ordersQuery = query(ordersRef, orderBy("createdAt", "desc"));
+    
+    const unsubscribe = onSnapshot(
+      ordersQuery,
+      (snapshot) => {
+        const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...convertTimestampToDate(doc.data())
+        })) as Order[];
+        
+        setData(orders);
+        setLoading(false);
+      },
+      (err) => {
+        setError(err instanceof Error ? err : new Error(String(err)));
+        setLoading(false);
       }
-    }
+    );
+    
+    return () => unsubscribe();
+  }, []);
 
-    fetchData()
-
-    // In a real implementation, this would be a Firestore listener
-    const interval = setInterval(fetchData, 5000)
-    return () => clearInterval(interval)
-  }, [])
-
-  return { data, loading, error }
+  return { data, loading, error };
 }
 
 export function useOrdersByCustomerId(customerId: string) {
-  const [data, setData] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [data, setData] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await firestore.getOrdersByCustomerId(customerId)
-        setData(result)
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error(String(err)))
-      } finally {
-        setLoading(false)
-      }
+    if (!customerId) {
+      setData([]);
+      setLoading(false);
+      return () => {};
     }
+    
+    const ordersRef = collection(db, "orders");
+    // Fix: Ensure we're using a string comparison and proper indexing
+    const ordersQuery = query(
+      ordersRef, 
+      where("customerId", "==", customerId)
+      // Note: When you create a composite index, restore this line:
+      // orderBy("createdAt", "desc")
+    );
+    
+    const unsubscribe = onSnapshot(
+      ordersQuery,
+      (snapshot) => {
+        console.log(`Orders snapshot for customer ${customerId}:`, snapshot.size);
+        const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...convertTimestampToDate(doc.data())
+        })) as Order[];
+        
+        setData(orders);
+        setLoading(false);
+      },
+      (err) => {
+        console.error(`Error getting orders for customer ${customerId}:`, err);
+        setError(err instanceof Error ? err : new Error(String(err)));
+        setLoading(false);
+      }
+    );
+    
+    return () => unsubscribe();
+  }, [customerId]);
 
-    fetchData()
-
-    // In a real implementation, this would be a Firestore listener
-    const interval = setInterval(fetchData, 5000)
-    return () => clearInterval(interval)
-  }, [customerId])
-
-  return { data, loading, error }
+  return { data, loading, error };
 }
 
 export function useOrder(id: string) {
-  const [data, setData] = useState<Order | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [data, setData] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await firestore.getOrderById(id)
-        setData(result)
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error(String(err)))
-      } finally {
-        setLoading(false)
-      }
+    if (!id) {
+      setData(null);
+      setLoading(false);
+      return () => {};
     }
+    
+    const orderRef = doc(db, "orders", id);
+    
+    const unsubscribe = onSnapshot(
+      orderRef,
+      (doc) => {
+        if (doc.exists()) {
+          setData({
+            id: doc.id,
+            ...convertTimestampToDate(doc.data())
+          } as Order);
+        } else {
+          setData(null);
+        }
+        setLoading(false);
+      },
+      (err) => {
+        setError(err instanceof Error ? err : new Error(String(err)));
+        setLoading(false);
+      }
+    );
+    
+    return () => unsubscribe();
+  }, [id]);
 
-    fetchData()
-
-    // In a real implementation, this would be a Firestore listener
-    const interval = setInterval(fetchData, 5000)
-    return () => clearInterval(interval)
-  }, [id])
-
-  return { data, loading, error }
+  return { data, loading, error };
 }
 
 export function useTransactionsByOrderId(orderId: string) {
-  const [data, setData] = useState<Transaction[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [data, setData] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await firestore.getTransactionsByOrderId(orderId)
-        setData(result)
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error(String(err)))
-      } finally {
-        setLoading(false)
-      }
+    if (!orderId) {
+      setData([]);
+      setLoading(false);
+      return () => {};
     }
+    
+    const transactionsRef = collection(db, "transactions");
+    const transactionsQuery = query(
+      transactionsRef, 
+      where("orderId", "==", orderId),
+      // orderBy("createdAt", "desc")
+    );
+    
+    const unsubscribe = onSnapshot(
+      transactionsQuery,
+      (snapshot) => {
+        const transactions = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...convertTimestampToDate(doc.data())
+        })) as Transaction[];
+        
+        setData(transactions);
+        setLoading(false);
+      },
+      (err) => {
+        setError(err instanceof Error ? err : new Error(String(err)));
+        setLoading(false);
+      }
+    );
+    
+    return () => unsubscribe();
+  }, [orderId]);
 
-    fetchData()
-
-    // In a real implementation, this would be a Firestore listener
-    const interval = setInterval(fetchData, 5000)
-    return () => clearInterval(interval)
-  }, [orderId])
-
-  return { data, loading, error }
+  return { data, loading, error };
 }
 
+export function useTransactionsByCustomerId(customerId: string) {
+  const [data, setData] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!customerId) {
+      setData([]);
+      setLoading(false);
+      return () => {};
+    }
+    
+    const transactionsRef = collection(db, "transactions");
+    // Fix: Ensure we're using a string comparison and proper indexing
+    const transactionsQuery = query(
+      transactionsRef, 
+      where("customerId", "==", customerId)
+      // Note: When you create a composite index, restore this line:
+      // orderBy("createdAt", "desc")
+    );
+    
+    const unsubscribe = onSnapshot(
+      transactionsQuery,
+      (snapshot) => {
+        console.log(`Transactions snapshot for customer ${customerId}:`, snapshot.size);
+        const transactions = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...convertTimestampToDate(doc.data())
+        })) as Transaction[];
+        
+        setData(transactions);
+        setLoading(false);
+      },
+      (err) => {
+        console.error(`Error getting transactions for customer ${customerId}:`, err);
+        setError(err instanceof Error ? err : new Error(String(err)));
+        setLoading(false);
+      }
+    );
+    
+    return () => unsubscribe();
+  }, [customerId]);
+
+  return { data, loading, error };
+}

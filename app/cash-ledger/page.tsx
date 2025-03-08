@@ -126,7 +126,7 @@ export default function Dashboard() {
                       </TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" asChild>
-                          <Link href={`/orders/${order.id}`}>
+                          <Link href={`/cash-ledger/orders/${order.id}`}>
                             <ArrowUpRight className="h-4 w-4" />
                             <span className="sr-only">View order</span>
                           </Link>
