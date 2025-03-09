@@ -262,7 +262,7 @@ export default function OrderDetailsPage() {
       </div>
 
       {isAddingTransaction && (
-        <Card>
+        <Card className="border-4 border-black">
           <form onSubmit={handleSubmit}>
             <CardHeader>
               <CardTitle>Add Transaction</CardTitle>
@@ -349,7 +349,7 @@ export default function OrderDetailsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">{formatCurrency(transaction.amount)}</TableCell>
-                      <TableCell>{transaction.notes || "-"}</TableCell>
+                      <TableCell>{transaction.notes ?? "-"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

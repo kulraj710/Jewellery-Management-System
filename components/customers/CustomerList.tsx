@@ -7,8 +7,12 @@ import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 import { Eye, Edit } from "lucide-react"
+import { useRouter } from "next/navigation";
 
 const CustomerList = ({ customers } : any) => {
+
+  const router = useRouter();
+
   return (
     <Card>
       <CardHeader>
@@ -29,18 +33,18 @@ const CustomerList = ({ customers } : any) => {
                 <TableHead>Phone</TableHead>
                 <TableHead>Address</TableHead>
                 <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                {/* <TableHead className="text-right">Actions</TableHead> */}
               </TableRow>
             </TableHeader>
             <TableBody>
               {customers.map((customer : any) => (
-                <TableRow key={customer.id}>
+                <TableRow key={customer.id} className="cursor-pointer" onClick={() => router.push(`/cash-ledger/customers/${customer.id}`)}>
                   <TableCell>{customer.profileNumber}</TableCell>
                   <TableCell className="font-medium">{customer.name}</TableCell>
                   <TableCell>{customer.phone}</TableCell>
                   <TableCell className="max-w-xs truncate">{customer.address}</TableCell>
                   <TableCell>{formatDate(customer.createdAt)}</TableCell>
-                  <TableCell className="text-right">
+                  {/* <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                     <Button variant="ghost" size="icon" asChild>
                             <Link href={`/cash-ledger/customers/${customer.id}`}>
@@ -55,8 +59,9 @@ const CustomerList = ({ customers } : any) => {
                             </Link>
                           </Button>
                     </div>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
+                
               ))}
             </TableBody>
           </Table>
