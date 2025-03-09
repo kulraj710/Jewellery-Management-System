@@ -65,7 +65,6 @@ export default function OrdersPage() {
     new Date()
   );
   const [customerSearchQuery, setCustomerSearchQuery] = useState("");
-  
 
   // Client-side filtering for customers using the search query
   const customerFilteredCustomers = customers.filter((customer) => {
@@ -121,7 +120,7 @@ export default function OrdersPage() {
       });
       setIsAddingOrder(false);
 
-      router.push(`/cash-ledger/orders/${add.id}`)
+      router.push(`/cash-ledger/orders/${add.id}`);
     } catch (error) {
       showToast.error("Error", "Failed to create order. Please try again.");
     }
@@ -139,7 +138,7 @@ export default function OrdersPage() {
 
   const handleCustomerCreated = async (newCustomer: any) => {
     flushSync(() => {
-      setCustomers((prev : any) => [...prev, newCustomer]);
+      setCustomers((prev: any) => [...prev, newCustomer]);
     });
 
     // Immediately update the selected customer once the customers array is updated
@@ -179,113 +178,134 @@ export default function OrdersPage() {
       </div>
 
       {isAddingOrder && (
-    <Card>
-  <form onSubmit={handleSubmit}>
-    <CardHeader>
-      <CardTitle>Create New Order</CardTitle>
-      <CardDescription>
-        Select a customer and enter the order details.
-      </CardDescription>
-    </CardHeader>
-    <CardContent className="space-y-4">
-      {/* Customer Select with integrated search */}
-      <div className="space-y-2">
-        <Label htmlFor="customerId">Customer *</Label>
-        <Select
-          value={formData.customerId}
-          onValueChange={(value) => {
-            if (value === "create-new") {
-              setIsModalOpen(true);
-            } else {
-              handleSelectChange(value);
-            }
-          }}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a customer" />
-          </SelectTrigger>
-          <SelectContent>
-            <Command>
-              <CommandInput
-                placeholder="Search customers..."
-                value={customerSearchQuery}
-                onValueChange={setCustomerSearchQuery}
-              />
-              <CommandList>
-                <CommandGroup>
-                  {customersLoading ? (
-                    <CommandItem disabled>Loading customers...</CommandItem>
-                  ) : customerFilteredCustomers.length === 0 ? (
-                    <CommandItem disabled>No customers found</CommandItem>
-                  ) : (
-                    customerFilteredCustomers.map((customer) => (
-                      <SelectItem key={customer.id} value={customer.id}>
-                        ({customer.profileNumber}) {customer.name} ({customer.phone})
-                      </SelectItem>
-                    ))
-                  )}
-                  <SelectItem value="create-new">
-                    + Create New Profile
-                  </SelectItem>
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </SelectContent>
-        </Select>
-      </div>
-      {/* Total Amount and Date Picker */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="space-y-2 flex-1">
-          <Label htmlFor="totalAmount">Total Amount *</Label>
-          <Input
-            id="totalAmount"
-            name="totalAmount"
-            type="number"
-            step="0.01"
-            min="0.01"
-            value={formData.totalAmount}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="space-y-2 flex-1">
-          <Label htmlFor="invoiceDate">Invoice Date</Label>
-          <AddDatePicker
-            selectedDate={orderDate}
-            setSelectedDate={setOrderDate}
-          />
-        </div>
-      </div>
-      {/* Notes */}
-      <div className="space-y-2">
-        <Label htmlFor="notes">Notes</Label>
-        <Textarea
-          id="notes"
-          name="notes"
-          value={formData.notes}
-          onChange={handleInputChange}
-          placeholder="Optional notes about the order"
-        />
-      </div>
-    </CardContent>
-    <CardFooter>
-      <Button type="submit">Create Order</Button>
-    </CardFooter>
-  </form>
+        <Card>
+          <form onSubmit={handleSubmit}>
+            <CardHeader>
+              <CardTitle>Create New Order</CardTitle>
+              <CardDescription>
+                Select a customer and enter the order details.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Customer Select with integrated search */}
+              <div className="space-y-2">
+                <Label htmlFor="customerId">Customer *</Label>
+                <Select
+                  value={formData.customerId}
+                  onValueChange={(value) => {
+                    if (value === "create-new") {
+                      setIsModalOpen(true);
+                    } else {
+                      handleSelectChange(value);
+                    }
+                  }}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a customer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <Command>
+                      <Input
+                        placeholder="Search customers..."
+                        value={customerSearchQuery}
+                        onChange={(e) => setCustomerSearchQuery(e.target.value)}
+                      />
+                      <CommandList>
+                        <CommandGroup>
+                          {customersLoading ? (
+                            <CommandItem disabled>
+                              Loading customers...
+                            </CommandItem>
+                          ) : customerFilteredCustomers.length === 0 ? (
+                            <CommandItem disabled>
+                              No customers found
+                            </CommandItem>
+                          ) : (
+                            customerFilteredCustomers.map((customer) => (
+                              <CommandItem
+                                key={customer.id}
+                                onSelect={() => handleSelectChange(customer.id)}
+                              >
+                                <SelectItem
+                                  key={customer.id}
+                                  value={customer.id}
+                                >
+                                  ({customer.profileNumber}) {customer.name} (
+                                  {customer.phone})
+                                </SelectItem>
+                              </CommandItem>
+                            ))
+                          )}
+                          <SelectItem value="create-new">
+                            + Create New Profile
+                          </SelectItem>
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </SelectContent>
+                </Select>
+              </div>
+              {/* Total Amount and Date Picker */}
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="space-y-2 flex-1">
+                  <Label htmlFor="totalAmount">Total Amount *</Label>
+                  <Input
+                    id="totalAmount"
+                    name="totalAmount"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    value={formData.totalAmount}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2 flex-1">
+                  <Label htmlFor="invoiceDate">Invoice Date</Label>
+                  <AddDatePicker
+                    selectedDate={orderDate}
+                    setSelectedDate={setOrderDate}
+                  />
+                </div>
+              </div>
+              {/* Notes */}
+              <div className="space-y-2">
+                <Label htmlFor="notes">Notes</Label>
+                <Textarea
+                  id="notes"
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleInputChange}
+                  placeholder="Optional notes about the order"
+                />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button type="submit">Create Order</Button>
+            </CardFooter>
+          </form>
 
-  <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-    <DialogContent>
-      <CustomerForm isFormInModal={true} onCustomerCreated={handleCustomerCreated}/>
-      <DialogFooter>
-        <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
-</Card>
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogContent>
+              <CustomerForm
+                isFormInModal={true}
+                onCustomerCreated={handleCustomerCreated}
+              />
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                  Cancel
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </Card>
       )}
 
-   <OrderList filteredOrders={filteredOrders} ordersLoading={ordersLoading} />
+      <OrderList
+        filteredOrders={filteredOrders}
+        ordersLoading={ordersLoading}
+      />
     </div>
   );
 }
