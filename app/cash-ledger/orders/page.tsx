@@ -3,9 +3,8 @@
 import type React from "react";
 import { useState } from "react";
 import { flushSync } from "react-dom";
-import Link from "next/link";
+// import { useRouter } from "next/compat/router";
 import { useOrders, useCustomers, firestore } from "@/lib/firebase";
-import { formatCurrency, formatDate } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -22,19 +21,9 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { showToast } from "@/lib/toast";
 import {
   Select,
@@ -43,7 +32,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Plus, ArrowUpRight } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -53,6 +42,8 @@ import {
 } from "@/components/ui/dialog";
 import CustomerForm from "@/components/customers/CustomerForm";
 import { AddDatePicker } from "@/components/invoice/AddDatePicker";
+import OrderList from "@/components/cash-ledger/orders/OrderList";
+import { useRouter } from "next/navigation";
 
 export default function OrdersPage() {
   const { data: orders, loading: ordersLoading } = useOrders();
@@ -69,10 +60,12 @@ export default function OrdersPage() {
     notes: "",
   });
 
+  const router = useRouter();
   const [orderDate, setOrderDate] = useState<Date | null | undefined>(
     new Date()
   );
   const [customerSearchQuery, setCustomerSearchQuery] = useState("");
+  
 
   // Client-side filtering for customers using the search query
   const customerFilteredCustomers = customers.filter((customer) => {
@@ -109,7 +102,7 @@ export default function OrdersPage() {
         throw new Error("Customer not found");
       }
 
-      await firestore.addOrder({
+      const add = await firestore.addOrder({
         customerId: formData.customerId,
         customerName: selectedCustomer.name,
         totalAmount: Number.parseFloat(formData.totalAmount),
@@ -127,6 +120,8 @@ export default function OrdersPage() {
         notes: "",
       });
       setIsAddingOrder(false);
+
+      router.push(`/cash-ledger/orders/${add.id}`)
     } catch (error) {
       showToast.error("Error", "Failed to create order. Please try again.");
     }
@@ -184,110 +179,6 @@ export default function OrdersPage() {
       </div>
 
       {isAddingOrder && (
-    //    <Card>
-    //    <form onSubmit={handleSubmit}>
-    //      <CardHeader>
-    //        <CardTitle>Create New Order</CardTitle>
-    //        <CardDescription>
-    //          Select a customer and enter the order details.
-    //        </CardDescription>
-    //      </CardHeader>
-    //      <CardContent className="space-y-4">
-    //        {/* Customer Select with integrated search */}
-    //        <div className="space-y-2">
-    //          <Label htmlFor="customerId">Customer *</Label>
-    //          <Select
-    //            value={formData.customerId}
-    //            onValueChange={handleSelectChange}
-    //            required
-    //          >
-    //            <SelectTrigger>
-    //              <SelectValue placeholder="Select a customer" />
-    //            </SelectTrigger>
-    //            <SelectContent>
-    //              <Command>
-    //                <CommandInput
-    //                  placeholder="Search customers..."
-    //                  value={customerSearchQuery}
-    //                  onValueChange={setCustomerSearchQuery}
-    //                />
-    //                <CommandList>
-    //                  <CommandGroup>
-    //                    {customersLoading ? (
-    //                      <CommandItem disabled>Loading customers...</CommandItem>
-    //                    ) : customerFilteredCustomers.length === 0 ? (
-    //                      <CommandItem disabled>No customers found</CommandItem>
-    //                    ) : (
-    //                      customerFilteredCustomers.map((customer) => (
-    //                        <CommandItem
-    //                          key={customer.id}
-    //                          value={customer.id}
-    //                          onSelect={() => handleSelectChange(customer.id)}
-    //                        >
-    //                          ({customer.profileNumber}) {customer.name} ({customer.phone})
-    //                        </CommandItem>
-    //                      ))
-    //                    )}
-    //                    <CommandItem
-    //                      onSelect={() => handleSelectChange("create-new")}
-    //                    >
-    //                      + Create New Profile
-    //                    </CommandItem>
-    //                  </CommandGroup>
-    //                </CommandList>
-    //              </Command>
-    //            </SelectContent>
-    //          </Select>
-    //        </div>
-    //        {/* Total Amount and Date Picker */}
-    //        <div className="flex flex-col md:flex-row gap-4">
-    //          <div className="space-y-2 flex-1">
-    //            <Label htmlFor="totalAmount">Total Amount *</Label>
-    //            <Input
-    //              id="totalAmount"
-    //              name="totalAmount"
-    //              type="number"
-    //              step="0.01"
-    //              min="0.01"
-    //              value={formData.totalAmount}
-    //              onChange={handleInputChange}
-    //              required
-    //            />
-    //          </div>
-    //          <div className="space-y-2 flex-1">
-    //            <Label htmlFor="invoiceDate">Invoice Date</Label>
-    //            <AddDatePicker
-    //              selectedDate={orderDate}
-    //              setSelectedDate={setOrderDate}
-    //            />
-    //          </div>
-    //        </div>
-    //        {/* Notes */}
-    //        <div className="space-y-2">
-    //          <Label htmlFor="notes">Notes</Label>
-    //          <Textarea
-    //            id="notes"
-    //            name="notes"
-    //            value={formData.notes}
-    //            onChange={handleInputChange}
-    //            placeholder="Optional notes about the order"
-    //          />
-    //        </div>
-    //      </CardContent>
-    //      <CardFooter>
-    //        <Button type="submit">Create Order</Button>
-    //      </CardFooter>
-    //    </form>
-
-    //    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-    //    <DialogContent>
-    //      <CustomerForm isFormInModal={true} onCustomerCreated={handleCustomerCreated}/>
-    //      <DialogFooter>
-    //        <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-    //      </DialogFooter>
-    //    </DialogContent>
-    //  </Dialog>
-    //  </Card>
     <Card>
   <form onSubmit={handleSubmit}>
     <CardHeader>
@@ -394,78 +285,7 @@ export default function OrdersPage() {
 </Card>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Order List</CardTitle>
-          <CardDescription>
-            Manage your orders and track payments
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {ordersLoading ? (
-            <div className="space-y-2">
-              {[...Array(5)].map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full" />
-              ))}
-            </div>
-          ) : filteredOrders.length === 0 ? (
-            <p className="text-center py-4 text-muted-foreground">
-              No orders found. Try a different search term or create a new
-              order.
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Order ID</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Total</TableHead>
-                    <TableHead className="text-right">Pending</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredOrders.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell>{order.id}</TableCell>
-                      <TableCell className="font-medium">
-                        {order.customerName}
-                      </TableCell>
-                      <TableCell>{formatDate(order.createdAt)}</TableCell>
-                      <TableCell className="text-right">
-                        {formatCurrency(order.totalAmount)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {formatCurrency(order.pendingAmount)}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            order.status === "active" ? "default" : "secondary"
-                          }
-                        >
-                          {order.status === "active" ? "Active" : "Closed"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" asChild>
-                          <Link href={`/cash-ledger/orders/${order.id}`}>
-                            <ArrowUpRight className="h-4 w-4" />
-                            <span className="sr-only">View order</span>
-                          </Link>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+   <OrderList filteredOrders={filteredOrders} ordersLoading={ordersLoading} />
     </div>
   );
 }

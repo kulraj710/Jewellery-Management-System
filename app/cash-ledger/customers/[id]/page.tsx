@@ -79,7 +79,7 @@ export default function CustomerDetailsPage() {
           </div>
         </div>
         <Button asChild>
-          <Link href={`cash-ledger/customers/${customer.id}/edit`}>
+          <Link href={`/cash-ledger/customers/${customer.id}/edit`}>
             <Edit className="mr-2 h-4 w-4" />
             Edit Customer
           </Link>
