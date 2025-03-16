@@ -41,8 +41,8 @@ export interface Order {
   status: "active" | "closed"
   notes?: string
   createdAt: Date,
-  dueDate: Date | undefined,
-  lastPaymentDate : Date | undefined,
+  dueDate?: Date | undefined,
+  lastPaymentDate? : Date | undefined,
   lastPaymentAmount? : number 
 
 }
