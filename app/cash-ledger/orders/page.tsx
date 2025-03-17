@@ -44,6 +44,14 @@ import CustomerForm from "@/components/customers/CustomerForm";
 import { AddDatePicker } from "@/components/invoice/AddDatePicker";
 import OrderList from "@/components/cash-ledger/orders/OrderList";
 import { useRouter } from "next/navigation";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format, isBefore, startOfDay } from "date-fns";
+
 
 export default function OrdersPage() {
   const { data: orders, loading: ordersLoading } = useOrders();
@@ -58,6 +66,7 @@ export default function OrdersPage() {
     customerId: "",
     totalAmount: "",
     notes: "",
+    dueDate : new Date(),
   });
 
   const router = useRouter();
@@ -106,6 +115,7 @@ export default function OrdersPage() {
         customerName: selectedCustomer.name,
         totalAmount: Number.parseFloat(formData.totalAmount),
         notes: formData.notes,
+        dueDate: formData.dueDate,
       });
 
       showToast.success(
@@ -117,6 +127,7 @@ export default function OrdersPage() {
         customerId: "",
         totalAmount: "",
         notes: "",
+        dueDate : new Date(),
       });
       setIsAddingOrder(false);
 
@@ -147,6 +158,14 @@ export default function OrdersPage() {
     });
 
     setIsModalOpen(false);
+  };
+
+  const handleDueDateSelect = (date: Date | undefined) => {
+    if (date && isBefore(startOfDay(date), startOfDay(new Date()))) {
+      // Date is in the past, do not update state
+      return;
+    }
+    setFormData((prev : any) => ({ ...prev, dueDate: date || null }));
   };
 
   return (
@@ -269,6 +288,34 @@ export default function OrdersPage() {
                   />
                 </div>
               </div>
+
+              {/* Due Date */}
+              <div className="space-y-2">
+                  <Label htmlFor="dueDate">Due Date for Order</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Input
+                        placeholder="Pick a Due Date"
+                        value={
+                          formData.dueDate ? format(formData.dueDate, "PPP") : ""
+                        }
+                        
+                        readOnly
+                        className="text-left cursor-pointer"
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={formData.dueDate}
+                        onSelect={handleDueDateSelect}
+                        disabled={(date) => isBefore(startOfDay(date), startOfDay(new Date()))}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
               {/* Notes */}
               <div className="space-y-2">
                 <Label htmlFor="notes">Notes</Label>
@@ -280,6 +327,8 @@ export default function OrdersPage() {
                   placeholder="Optional notes about the order"
                 />
               </div>
+
+              
             </CardContent>
             <CardFooter>
               <Button type="submit">Create Order</Button>

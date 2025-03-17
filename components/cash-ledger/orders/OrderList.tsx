@@ -69,6 +69,7 @@ const OrderList = ({ ordersLoading, filteredOrders }: Props) => {
                   <TableHead>Date</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                   <TableHead className="text-right">Pending</TableHead>
+                  <TableHead>Due Date</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Notes</TableHead>
                   {/* <TableHead className="text-right">Actions</TableHead> */}
@@ -96,6 +97,13 @@ const OrderList = ({ ordersLoading, filteredOrders }: Props) => {
                     <TableCell className="text-right">
                       {formatCurrency(order.pendingAmount)}
                     </TableCell>
+
+                    <TableCell>
+                      {order.dueDate
+                        ? formatDate(order.dueDate)
+                        : "N/A"}
+                    </TableCell>
+
                     <TableCell>
                       <Badge
                         variant={
