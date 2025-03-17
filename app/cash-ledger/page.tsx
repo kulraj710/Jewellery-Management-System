@@ -108,7 +108,7 @@ export default function Dashboard() {
     const collectionRate = totalAmount > 0 ? (receivedAmount / totalAmount) * 100 : 0
     const urgentOrders = selectedOrders.filter(order => 
       order.status === "active" && order.pendingAmount > 0 && 
-      order?.dueDate && new Date(order.dueDate) < new Date()
+      order?.dueDate && new Date(order.dueDate.toDate()) < new Date()
     ).length
 
     return {
@@ -307,7 +307,7 @@ export default function Dashboard() {
 
                     <TableBody>
                       {sortedOrders.map((order) => (
-                        <TableRow key={order.id} className={order.dueDate && new Date(order.dueDate) < new Date() && order.pendingAmount > 0 ? "bg-red-50" : ""}>
+                        <TableRow key={order.id} className={order.dueDate && new Date(order.dueDate.toDate()) < new Date() && order.pendingAmount > 0 ? "bg-red-50" : ""}>
                           <TableCell className="font-medium">{order.customerName}</TableCell>
                           <TableCell>{order.createdAt ? format(new Date(order.createdAt), "dd-MM-yyyy") : "N/A"}</TableCell>
                           <TableCell className="text-right">{formatCurrency(order.totalAmount)}</TableCell>
@@ -321,7 +321,7 @@ export default function Dashboard() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            {order.dueDate ? format(new Date(order.dueDate), "dd-MM-yyyy") : "N/A"}
+                            {order.dueDate ? format(new Date(order.dueDate.toDate()), "dd-MM-yyyy") : "N/A"}
                           </TableCell>
                           <TableCell className="text-right">
                               <Button variant="ghost" size="icon" asChild>
@@ -457,7 +457,7 @@ export default function Dashboard() {
                       <TableBody>
                         {/* Same row structure as in "current" tab */}
                         {sortedOrders.map((order) => (
-                          <TableRow key={order.id} className={order.dueDate && new Date(order.dueDate) < new Date() && order.pendingAmount > 0 ? "bg-red-50" : ""}>
+                          <TableRow key={order.id} className={order.dueDate && new Date(order.dueDate.toDate()) < new Date() && order.pendingAmount > 0 ? "bg-red-50" : ""}>
                             <TableCell className="font-medium">{order.customerName}</TableCell>
                             <TableCell>{order.createdAt ? format(new Date(order.createdAt), "dd-MM-yyyy") : "N/A"}</TableCell>
                             <TableCell className="text-right">{formatCurrency(order.totalAmount)}</TableCell>
@@ -475,7 +475,7 @@ export default function Dashboard() {
                               </Badge>
                             </TableCell>
                             <TableCell>
-                              {order.dueDate ? format(new Date(order.dueDate), "dd-MM-yyyy") : "N/A"}
+                              {order.dueDate ? format(new Date(order.dueDate.toDate()), "dd-MM-yyyy") : "N/A"}
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-1">
@@ -636,7 +636,7 @@ export default function Dashboard() {
                     </TableHeader>
                     <TableBody>
                       {sortedOrders.map((order) => (
-                        <TableRow key={order.id} className={order.dueDate && new Date(order.dueDate) < new Date() && order.pendingAmount > 0 ? "bg-red-50" : ""}>
+                        <TableRow key={order.id} className={order.dueDate && new Date(order.dueDate.toDate()) < new Date() && order.pendingAmount > 0 ? "bg-red-50" : ""}>
                           <TableCell className="font-medium">{order.customerName}</TableCell>
                           <TableCell>{order.createdAt ? format(new Date(order.createdAt), "dd-MM-yyyy") : "N/A"}</TableCell>
                           <TableCell className="text-right">{formatCurrency(order.totalAmount)}</TableCell>
@@ -653,7 +653,7 @@ export default function Dashboard() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            {order.dueDate ? format(new Date(order.dueDate), "dd-MM-yyyy") : "N/A"}
+                            {order.dueDate ? format(new Date(order.dueDate.toDate()), "dd-MM-yyyy") : "N/A"}
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-1">

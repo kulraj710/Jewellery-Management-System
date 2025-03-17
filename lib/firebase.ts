@@ -41,7 +41,7 @@ export interface Order {
   status: "active" | "closed"
   notes?: string
   createdAt: Date,
-  dueDate?: Date | undefined,
+  dueDate?: any,
   lastPaymentDate? : Date | undefined,
   lastPaymentAmount? : number 
 
@@ -54,7 +54,9 @@ export interface Transaction {
   amount: number
   type: "incoming" | "outgoing"
   notes?: string
-  createdAt: Date
+  createdAt: Date, 
+  date : Date,
+  paymentMethod? : string
 }
 
 // Helper function to convert Firestore data to our types
@@ -63,6 +65,9 @@ const convertTimestampToDate = (data: any) => {
   
   if (result.createdAt && result.createdAt instanceof Timestamp) {
     result.createdAt = result.createdAt.toDate();
+  }
+  if (result.date && result.date instanceof Timestamp) {
+    result.date = result.date.toDate();
   }
   
   return result;
