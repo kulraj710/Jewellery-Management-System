@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -43,8 +43,9 @@ import DeleteInvoiceButton from "./invoice-list/DeleteInvoiceButton";
 import EditInvoiceButton from "./invoice-list/EditInvoiceButton";
 
 export function InvoicesPageComponent() {
-  
+
   const [invoices, setInvoices] = useState<any[]>([]);
+  const [allInvoices, setAllInvoices] = useState<any[]>([]); // Store all invoices for search
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,62 +53,75 @@ export function InvoicesPageComponent() {
   const [lastVisible, setLastVisible] = useState<any>(null);
   const [pageSnapshots, setPageSnapshots] = useState<any[]>([]); // Store invoices for each page
   const [totalEntries, setTotalEntries] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Use one effect that refetches invoices based on whether a search term is provided.
+  // Initial load - fetch first page and all invoices for search
   useEffect(() => {
-    // If there's a search term, ignore pagination and fetch ALL invoices:
-    // if (searchTerm !== "" && searchTerm.length > 2) {
-    //   const fetchAllInvoices = async () => {
-    //     const invoiceQuery = query(
-    //       collection(db, "invoice"),
-    //       orderBy("invoiceDate", "desc")
-    //       // Note: no limit for full-search
-    //     );
-    //     const querySnapshot = await getDocs(invoiceQuery);
-    //     const fetchedInvoices = querySnapshot.docs.map((doc) => ({
-    //       id: doc.id,
-    //       ...doc.data(),
-    //     }));
-    //     setInvoices(fetchedInvoices);
-    //     setTotalEntries(querySnapshot.size);
-    //     // Reset pagination state since we're in search mode.
-    //     setCurrentPage(1);
-    //     setPageSnapshots([]);
-    //     setLastVisible(null);
-    //   };
-    //   fetchAllInvoices();
-    // }
-    
-    // else {
-      // If no search term, use paginated fetch
-      const fetchInvoices = async () => {
-        const invoiceQuery = query(
+    const fetchInitialData = async () => {
+      try {
+        setIsLoading(true);
+        // Fetch first page for display
+        const paginatedQuery = query(
           collection(db, "invoice"),
           orderBy("invoiceDate", "desc"),
           limit(itemsPerPage)
         );
-        const querySnapshot = await getDocs(invoiceQuery);
-        const fetchedInvoices = querySnapshot.docs.map((doc) => ({
+        const paginatedSnapshot = await getDocs(paginatedQuery);
+        const fetchedInvoices = paginatedSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
         setInvoices(fetchedInvoices);
-        setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
-        // Store the first page's data
+        setLastVisible(paginatedSnapshot.docs[paginatedSnapshot.docs.length - 1]);
         setPageSnapshots([fetchedInvoices]);
 
-        // Also update the total count 
-        const countQuery = query(collection(db, "invoice"));
-        const snapshot = await getCountFromServer(countQuery);
-        setTotalEntries(snapshot.data().count);
-      // };
-    }
-    fetchInvoices();
+        // Fetch all invoices for search (ordered by date descending)
+        const allQuery = query(
+          collection(db, "invoice"),
+          orderBy("invoiceDate", "desc")
+        );
+        const allSnapshot = await getDocs(allQuery);
+        const allFetchedInvoices = allSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setAllInvoices(allFetchedInvoices);
+        setTotalEntries(allSnapshot.size);
+      } catch (error) {
+        console.error("Error fetching invoices:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInitialData();
   }, []);
 
+  // Calculate displayed invoices based on search
+  const displayedInvoices = useMemo(() => {
+    if (searchTerm.trim() !== "") {
+      // Search from all invoices
+      return allInvoices.filter(
+        (invoice) =>
+          String(invoice.name).toLowerCase().includes(searchTerm.toLowerCase()) ||
+          String(invoice.invoiceNo).toLowerCase().includes(searchTerm.toLowerCase()) ||
+          String(invoice.phone).toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    } else {
+      // Return paginated invoices
+      return invoices;
+    }
+  }, [searchTerm, allInvoices, invoices]);
+
+  // Update searching state
+  useEffect(() => {
+    setIsSearching(searchTerm.trim() !== "");
+  }, [searchTerm]);
+
   const handleNextPage = async () => {
-    // Only allow pagination if no search term is active.
-    if (searchTerm !== "") return;
+    // Only allow pagination if no search term is active
+    if (isSearching) return;
 
     if (currentPage < pageSnapshots.length) {
       // If the next page is already cached, just load it
@@ -126,33 +140,43 @@ export function InvoicesPageComponent() {
         id: doc.id,
         ...doc.data(),
       }));
-      setInvoices(newInvoices);
-      setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
-      setCurrentPage(currentPage + 1);
-      // Cache this page's data
-      setPageSnapshots([...pageSnapshots, newInvoices]);
+
+      if (newInvoices.length > 0) {
+        setInvoices(newInvoices);
+        setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        setCurrentPage(currentPage + 1);
+        // Cache this page's data
+        setPageSnapshots([...pageSnapshots, newInvoices]);
+      }
     }
   };
 
   const handlePreviousPage = () => {
-    // Only allow pagination if no search term is active.
-    if (searchTerm !== "" || currentPage === 1) return;
+    // Only allow pagination if no search term is active
+    if (isSearching || currentPage === 1) return;
     // Load the previous page's data from stored snapshots
     setInvoices(pageSnapshots[currentPage - 2]);
     setCurrentPage(currentPage - 1);
   };
 
-  // Client-side filtering based on search term and selected date.
-  // (This runs on whichever invoices were loaded—either the full set for search or a paginated set.)
-  const filteredInvoices = invoices
-    .filter(
-      (invoice) =>
-        String(invoice.name).toLowerCase().includes(searchTerm.toLowerCase()) ||
-        String(invoice.invoiceNo)
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-    )
-    .filter((invoice) => {
+  // Handle invoice deletion
+  const handleInvoiceDeleted = (deletedInvoiceId: string) => {
+    // Update all invoices list
+    setAllInvoices(allInvoices.filter((inv) => inv.id !== deletedInvoiceId));
+    // Update current page invoices
+    setInvoices(invoices.filter((inv) => inv.id !== deletedInvoiceId));
+    // Update cached pages
+    const updatedSnapshots = pageSnapshots.map((page) =>
+      page.filter((inv: any) => inv.id !== deletedInvoiceId)
+    );
+    setPageSnapshots(updatedSnapshots);
+    // Decrease total count
+    setTotalEntries(totalEntries - 1);
+  };
+
+  // Filter by selected date only (search is already handled in displayedInvoices)
+  const filteredInvoices = useMemo(() => {
+    return displayedInvoices.filter((invoice) => {
       if (!selectedDate) return true;
       if (invoice.invoiceDate) {
         const invoiceDateFormatted = format(
@@ -164,6 +188,7 @@ export function InvoicesPageComponent() {
       }
       return false;
     });
+  }, [displayedInvoices, selectedDate]);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -178,8 +203,7 @@ export function InvoicesPageComponent() {
                 <div className="flex items-center space-x-2">
                   <Input
                     type="text"
-                    placeholder="Search invoices..."
-                    disabled
+                    placeholder="Search by name, invoice number, or phone..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="max-w-sm"
@@ -249,68 +273,90 @@ export function InvoicesPageComponent() {
 
               {/* Table Body */}
               <div className="mt-4">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Invoice No</TableHead>
-                      <TableHead>Customer Name</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Total Amount</TableHead>
-                      <TableHead>Advance</TableHead>
-                      <TableHead>Outstanding</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredInvoices.map((invoice) => (
-                      <TableRow key={`${invoice.invoiceNo}-${invoice.name}`}>
-                        <TableCell>{invoice.invoiceNo}</TableCell>
-                        <TableCell>{invoice.name}</TableCell>
-                        <TableCell>
-                          {invoice.invoiceDate &&
-                            format(invoice.invoiceDate.toDate(), "dd-MM-yyyy")}
-                        </TableCell>
-                        <TableCell>
-                          {formatCurrency(invoice.totalAmt)}
-                        </TableCell>
-                        <TableCell>{formatCurrency(invoice.payment)}</TableCell>
-                        <TableCell>
-                          {formatCurrency(invoice.totalAmt - invoice.payment)}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <ViewInvoiceButton
-                              invoiceData={invoice}
-                              invoiceDate={invoice.invoiceDate?.toDate()}
-                              products={invoice.productTable}
-                            />
-                            <EditInvoiceButton currentInvoice={invoice} />
-                            <PrintInvoiceButton
-                              invoiceData={invoice}
-                              invoiceDate={invoice.invoiceDate?.toDate()}
-                              products={invoice.productTable}
-                            />
-                            <DeleteInvoiceButton
-                              invoices={invoices}
-                              invoice={invoice}
-                              setInvoices={setInvoices}
-                            />
-                          </div>
-                        </TableCell>
+                {isLoading ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">Loading invoices...</p>
+                  </div>
+                ) : filteredInvoices.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">
+                      {searchTerm || selectedDate
+                        ? "No invoices found matching your search criteria."
+                        : "No invoices found. Create your first invoice to get started."}
+                    </p>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Invoice No</TableHead>
+                        <TableHead>Customer Name</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Total Amount</TableHead>
+                        <TableHead>Advance</TableHead>
+                        <TableHead>Outstanding</TableHead>
+                        <TableHead>Actions</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredInvoices.map((invoice) => (
+                        <TableRow key={invoice.id}>
+                          <TableCell>{invoice.invoiceNo}</TableCell>
+                          <TableCell>{invoice.name}</TableCell>
+                          <TableCell>
+                            {invoice.invoiceDate &&
+                              format(invoice.invoiceDate.toDate(), "dd-MM-yyyy")}
+                          </TableCell>
+                          <TableCell>
+                            {formatCurrency(invoice.totalAmt)}
+                          </TableCell>
+                          <TableCell>{formatCurrency(invoice.payment)}</TableCell>
+                          <TableCell>
+                            {formatCurrency(invoice.totalAmt - invoice.payment)}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-2">
+                              <ViewInvoiceButton
+                                invoiceData={invoice}
+                                invoiceDate={invoice.invoiceDate?.toDate()}
+                                products={invoice.productTable}
+                              />
+                              <EditInvoiceButton currentInvoice={invoice} />
+                              <PrintInvoiceButton
+                                invoiceData={invoice}
+                                invoiceDate={invoice.invoiceDate?.toDate()}
+                                products={invoice.productTable}
+                              />
+                              <DeleteInvoiceButton
+                                invoices={invoices}
+                                invoice={invoice}
+                                setInvoices={setInvoices}
+                                onDelete={handleInvoiceDeleted}
+                              />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
               </div>
 
               {/* Pagination and Total Rows */}
-              {/* Hide pagination controls during search mode */}
-              {!searchTerm && (
-                <div className="mt-4 flex items-center justify-between">
+              <div className="mt-4 flex items-center justify-between">
+                {isSearching ? (
                   <div>
-                    Showing {Math.min(currentPage * itemsPerPage, totalEntries)}{" "}
-                    out of {totalEntries} results
+                    Found {filteredInvoices.length} result{filteredInvoices.length !== 1 ? 's' : ''}
+                    {searchTerm && ` for "${searchTerm}"`}
                   </div>
+                ) : (
+                  <div>
+                    Showing {((currentPage - 1) * itemsPerPage) + 1} to{" "}
+                    {Math.min(currentPage * itemsPerPage, totalEntries)} of {totalEntries} results
+                  </div>
+                )}
+
+                {!isSearching && (
                   <div className="flex space-x-2">
                     <Button
                       variant="outline"
@@ -322,13 +368,13 @@ export function InvoicesPageComponent() {
                     <Button
                       variant="outline"
                       onClick={handleNextPage}
-                      disabled={filteredInvoices.length < itemsPerPage}
+                      disabled={currentPage * itemsPerPage >= totalEntries}
                     >
                       Next
                     </Button>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>

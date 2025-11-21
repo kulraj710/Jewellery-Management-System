@@ -46,6 +46,7 @@ const invoiceDataInitialObject = {
   payment: 0,
   outstanding: 0,
   note: "",
+  invoiceDate: new Date(),
 };
 
 export function CreateInvoiceComponent({
@@ -62,7 +63,16 @@ export function CreateInvoiceComponent({
 
   // State for form inputs
   const [invoiceData, setInvoiceData] = useState(invoiceDataState);
-  const [invoiceDate, setInvoiceDate] = useState(new Date());
+  const [invoiceDate, setInvoiceDate] = useState(() => {
+    // Handle both Firestore Timestamp and Date objects
+    if (invoiceDataState.invoiceDate) {
+      const dateValue: any = invoiceDataState.invoiceDate;
+      return typeof dateValue.toDate === 'function'
+        ? dateValue.toDate()
+        : dateValue;
+    }
+    return new Date();
+  });
 
   const [cgst, setCgst] = useState(invoiceDataState.cgst)
   const [sgst, setSgst] = useState(invoiceDataState.sgst)
@@ -99,6 +109,11 @@ export function CreateInvoiceComponent({
       await updateDoc(invoiceRef, updatedData);
 
       setMessage("Invoice successfully updated!");
+
+      // Redirect to invoices list after successful update
+      setTimeout(() => {
+        router.push("/invoices");
+      }, 1500);
     } catch (error: any) {
       console.error("Error updating invoice:", error);
       setMessage(error.message);
@@ -134,13 +149,15 @@ export function CreateInvoiceComponent({
       });
       console.log("Document written with ID: ", docRef.id);
       setMessage("Invoice Created!");
-      router.push("/");
+
+      // Redirect to invoices list after successful creation
+      setTimeout(() => {
+        router.push("/invoices");
+      }, 1500);
     } catch (error) {
       console.log(error);
-      alert("Something Went Wrong, Check yout Internet Connection!");
+      setMessage("Something Went Wrong, Check your Internet Connection!");
     } finally {
-      setInvoiceData(invoiceDataState);
-      setProducts([]);
       setLoading(false);
     }
   };

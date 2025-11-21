@@ -14,7 +14,7 @@ import { db } from "@/firebase";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 
-const DeleteInvoiceButton = ({ setInvoices, invoices, invoice }: any) => {
+const DeleteInvoiceButton = ({ setInvoices, invoices, invoice, onDelete }: any) => {
   const [invoiceToDelete, setInvoiceToDelete] = useState<any>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -22,11 +22,19 @@ const DeleteInvoiceButton = ({ setInvoices, invoices, invoice }: any) => {
     if (invoiceToDelete) {
       try {
         await deleteDoc(doc(db, "invoice", invoiceToDelete.id));
-        setInvoices(
-          invoices.filter((invoice: any) => invoice.id !== invoiceToDelete.id)
-        );
-        // setTotalEntries(totalEntries - 1);
+
+        // Call the parent's delete handler if provided
+        if (onDelete) {
+          onDelete(invoiceToDelete.id);
+        } else {
+          // Fallback to old behavior
+          setInvoices(
+            invoices.filter((invoice: any) => invoice.id !== invoiceToDelete.id)
+          );
+        }
+
         setInvoiceToDelete(null);
+        setIsDeleteDialogOpen(false);
       } catch (error) {
         console.error("Error deleting invoice:", error);
         // You might want to show an error message to the user here

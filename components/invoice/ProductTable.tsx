@@ -19,32 +19,42 @@ const CustomTable = ({ data, columns } : any) => {
   return (
     <table {...getTableProps()} style={{ borderCollapse: 'collapse', width: '100%' }} id="product-table-invoice">
       <thead>
-        {headerGroups.map((headerGroup : any) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column : any) => (
-              <th
-                {...column.getHeaderProps()}
-                style={{
-                  border: '1px solid black',
-                  padding: '1mm',
-                  textAlign: 'center',
-                }}
-              >
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
+        {headerGroups.map((headerGroup : any) => {
+          const { key: headerKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
+          return (
+            <tr key={headerKey} {...headerGroupProps}>
+              {headerGroup.headers.map((column : any) => {
+                const { key: columnKey, ...columnProps } = column.getHeaderProps();
+                return (
+                  <th
+                    key={columnKey}
+                    {...columnProps}
+                    style={{
+                      border: '1px solid black',
+                      padding: '1mm',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {column.render('Header')}
+                  </th>
+                );
+              })}
+            </tr>
+          );
+        })}
       </thead>
       <tbody {...getTableBodyProps()}>
         {rows.map(row => {
           prepareRow(row);
+          const { key: rowKey, ...rowProps } = row.getRowProps();
           return (
-            <tr {...row.getRowProps()} id='lastCell'>
+            <tr key={rowKey} {...rowProps} id='lastCell'>
               {row.cells.map(cell => {
+                const { key: cellKey, ...cellProps } = cell.getCellProps();
                 return (
                   <td
-                    {...cell.getCellProps()}
+                    key={cellKey}
+                    {...cellProps}
                     style={{
                       // border: '1px solid green',
                       borderBottom: 'none',
