@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -81,7 +81,30 @@ export function CreateInvoiceComponent({
   const [finalAmount, setFinalAmount] = useState(invoiceDataState.totalAmt)
   const [totalToShow, setTotalToShow] = useState(0)
 
+  // Sync state when invoiceDataState changes (important for update mode)
+  useEffect(() => {
+    if (isUpdate && invoiceDataState && invoiceDataState.id) {
+      setInvoiceData(invoiceDataState);
+      setProducts(productDataState || []);
+      setCgst(invoiceDataState.cgst || 0);
+      setSgst(invoiceDataState.sgst || 0);
+      setDiscount(invoiceDataState.discount || 0);
+      setNetAmount(invoiceDataState.netAmt || 0);
+      setFinalAmount(invoiceDataState.totalAmt || 0);
+
+      // Handle invoice date
+      if (invoiceDataState.invoiceDate) {
+        const dateValue: any = invoiceDataState.invoiceDate;
+        const date = typeof dateValue.toDate === 'function'
+          ? dateValue.toDate()
+          : dateValue;
+        setInvoiceDate(date);
+      }
+    }
+  }, [invoiceDataState, productDataState, isUpdate]);
+
   const updateInvoice = async () => {
+    setLoading(true);
     try {
       setMessage(null);
       // Reference to the invoice document by its ID
@@ -117,6 +140,8 @@ export function CreateInvoiceComponent({
     } catch (error: any) {
       console.error("Error updating invoice:", error);
       setMessage(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 

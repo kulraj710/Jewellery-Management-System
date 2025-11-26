@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { Pencil, Trash2 } from "lucide-react";
 
-const newProductInitialObject = {
+const newProductInitialObject: any = {
   sno: 1,
   pd: "",
   hsn: "",
@@ -28,6 +28,7 @@ const newProductInitialObject = {
   huid: 0,
   ochrg: 0,
   tval: 0,
+  id: undefined,
 };
 
 const ProductDetailsCard = ({
@@ -50,32 +51,32 @@ const ProductDetailsCard = ({
   }, [newProduct.net, newProduct.rate]);
 
   useEffect(() => {
-    if (isUpdate){
+    if (isUpdate && products.length > 0){
       let tval = calculateTotalTval(products);
       setTotalToShow(tval);
     }
-  }, [isUpdate])
+  }, [isUpdate, products])
 
   const calculateAutoFillValue = () => {
-    const amt = parseFloat(newProduct.amt.toString());
-    const lbr = parseFloat(newProduct.lbr.toString());
-    const huid = parseFloat(newProduct.huid.toString());
-    const ochrg = parseFloat(newProduct.ochrg.toString());
+    const amt = parseFloat((newProduct.amt ?? 0).toString());
+    const lbr = parseFloat((newProduct.lbr ?? 0).toString());
+    const huid = parseFloat((newProduct.huid ?? 0).toString());
+    const ochrg = parseFloat((newProduct.ochrg ?? 0).toString());
 
     if (!isNaN(amt) && !isNaN(lbr) && !isNaN(huid) && !isNaN(ochrg)) {
       const b = Math.round(amt + lbr + huid + ochrg);
       // setNetAmount(b);
-      setNewProduct((prev) => ({ ...prev, tval: b }));
+      setNewProduct((prev: any) => ({ ...prev, tval: b }));
     }
   };
   const calculateAutoFillValue1 = () => {
-    const num1 = parseFloat(newProduct.rate.toString());
-    const netw = parseFloat(newProduct.net.toString());
+    const num1 = parseFloat((newProduct.rate ?? 0).toString());
+    const netw = parseFloat((newProduct.net ?? 0).toString());
 
     if (!isNaN(netw) && !isNaN(num1)) {
       const val = Math.round(num1 * netw);
       // setNetAmount(val);
-      setNewProduct((prev) => ({ ...prev, amt: val }));
+      setNewProduct((prev: any) => ({ ...prev, amt: val }));
     } else {
       // setNetAmount(0);
     }
@@ -84,7 +85,7 @@ const ProductDetailsCard = ({
   function calculateTotalTval(arr: any) {
     let total = 0;
     for (const val of arr) {
-      total += parseFloat(val.tval);
+      total += parseFloat((val.tval ?? 0).toString());
     }
     return total;
   }
@@ -122,12 +123,28 @@ const ProductDetailsCard = ({
       huid: 0,
       ochrg: 0,
       tval: 0,
+      id: undefined,
     });
   };
 
   const editProduct = (product: any) => {
     setEditingProduct(product);
-    setNewProduct(product);
+    // Ensure all properties exist with default values
+    setNewProduct({
+      sno: product.sno ?? 1,
+      pd: product.pd ?? "",
+      hsn: product.hsn ?? "",
+      pcs: product.pcs ?? 0,
+      gr: product.gr ?? 0,
+      net: product.net ?? 0,
+      rate: product.rate ?? 0,
+      amt: product.amt ?? 0,
+      lbr: product.lbr ?? 0,
+      huid: product.huid ?? 0,
+      ochrg: product.ochrg ?? 0,
+      tval: product.tval ?? 0,
+      id: product.id,
+    });
   };
 
   const deleteProduct = (id: any) => {
@@ -155,6 +172,7 @@ const ProductDetailsCard = ({
       huid: 0,
       ochrg: 0,
       tval: 0,
+      id: undefined,
     });
   };
 
