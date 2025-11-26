@@ -188,18 +188,29 @@ export function CreateInvoiceComponent({
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <form className="space-y-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-[1600px] mx-auto py-4 px-4">
+        <form className="space-y-3">
           {isUpdate && invoiceDataState === null ? <div>Something went wrong!</div> : (
-            <Card>
-              <CardHeader>
-                <CardTitle>{isUpdate ? `Update Invoice (${invoiceData.invoiceNo})` : "Create New Invoice"}</CardTitle>
+            <Card className="shadow-sm">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl font-semibold">
+                    {isUpdate ? `Update Invoice #${invoiceData.invoiceNo}` : "Create New Invoice"}
+                  </CardTitle>
+                  <InvoiceDialog
+                    invoiceData={invoiceData}
+                    invoiceDate={invoiceDate}
+                    products={products}
+                    description={"Review your invoice before finalizing."}
+                  />
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="invoiceNo">Invoice No.</Label>
+              <CardContent className="space-y-4 pt-2">
+                {/* Invoice Header Info */}
+                <div className="grid grid-cols-3 gap-3 p-4 bg-slate-50 rounded-lg border">
+                  <div className="space-y-1">
+                    <Label htmlFor="invoiceNo" className="text-xs font-medium">Invoice No.</Label>
                     <Input
                       id="invoiceNo"
                       type="number"
@@ -211,27 +222,27 @@ export function CreateInvoiceComponent({
                           invoiceNo: e.target.value,
                         })
                       }
+                      className="h-9"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="invoiceDate">Invoice Date</Label>
+                  <div className="space-y-1">
+                    <Label htmlFor="invoiceDate" className="text-xs font-medium">Invoice Date</Label>
                     <AddDatePicker
                       selectedDate={invoiceDate}
                       setSelectedDate={setInvoiceDate}
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="invoiceType">Invoice Type</Label>
+                  <div className="space-y-1">
+                    <Label htmlFor="invoiceType" className="text-xs font-medium">Invoice Type</Label>
                     <Select
                       value={invoiceData.invoiceType}
                       onValueChange={(value) =>
                         setInvoiceData({ ...invoiceData, invoiceType: value })
                       }
-                      // defaultValue="ESTIMATE"
                     >
-                      <SelectTrigger id="invoiceType">
+                      <SelectTrigger id="invoiceType" className="h-9">
                         <SelectValue placeholder="Select invoice type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -263,32 +274,34 @@ export function CreateInvoiceComponent({
               </CardContent>
 
 
-              <CardFooter className="flex justify-between">
-                {!isUpdate ? (
-                  <Button
-                    type="button"
-                    onClick={createInvoice}
-                    disabled={loading}
-                  >
-                    {loading ? "Creating..." : "Create Invoice"}
-                  </Button>
-                ) : (
-                  <Button
-                    type="button"
-                    onClick={updateInvoice}
-                    disabled={loading}
-                  >
-                    {loading ? "Updating..." : "Update Invoice"}
-                  </Button>
-                )}
+              <CardFooter className="flex justify-between items-center pt-4 pb-4 bg-slate-50 border-t">
+                <div className="flex gap-2">
+                  {!isUpdate ? (
+                    <Button
+                      type="button"
+                      onClick={createInvoice}
+                      disabled={loading}
+                      className="px-6"
+                    >
+                      {loading ? "Creating..." : "Create Invoice"}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={updateInvoice}
+                      disabled={loading}
+                      className="px-6"
+                    >
+                      {loading ? "Updating..." : "Update Invoice"}
+                    </Button>
+                  )}
+                </div>
 
-                <p>{message}</p>
-                <InvoiceDialog
-                  invoiceData={invoiceData}
-                  invoiceDate={invoiceDate}
-                  products={products}
-                  description={"Review your invoice before finalizing."}
-                />
+                {message && (
+                  <p className={`text-sm font-medium ${message.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
+                    {message}
+                  </p>
+                )}
               </CardFooter>
             </Card>
           )}

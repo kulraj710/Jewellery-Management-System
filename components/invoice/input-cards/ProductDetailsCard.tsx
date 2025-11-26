@@ -177,14 +177,17 @@ const ProductDetailsCard = ({
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>2. Product Details</CardTitle>
+    <Card className="border-slate-200">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+          <span className="bg-green-100 text-green-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+          Product Details
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div className="space-y-2">
-            <Label htmlFor="product_name">Product Name</Label>
+        <div className="grid grid-cols-6 gap-2 mb-3 p-3 bg-slate-50 rounded-lg border">
+          <div className="space-y-1">
+            <Label htmlFor="product_name" className="text-xs font-medium">Product Name</Label>
             <Input
               placeholder="Product Name"
               id="product_name"
@@ -195,11 +198,12 @@ const ProductDetailsCard = ({
                   pd: e.target.value,
                 })
               }
+              className="h-8 text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="hsn_code">HSN Code</Label>
+          <div className="space-y-1">
+            <Label htmlFor="hsn_code" className="text-xs font-medium">HSN Code</Label>
             <Input
               id="hsn_code"
               placeholder="HSN Code"
@@ -210,11 +214,12 @@ const ProductDetailsCard = ({
                   hsn: e.target.value,
                 })
               }
+              className="h-8 text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="psc">Psc</Label>
+          <div className="space-y-1">
+            <Label htmlFor="psc" className="text-xs font-medium">Pcs</Label>
             <Input
               type="number"
               id="psc"
@@ -226,11 +231,12 @@ const ProductDetailsCard = ({
                   pcs: Number(e.target.value),
                 })
               }
+              className="h-8 text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="gr_wt">Gr Wt</Label>
+          <div className="space-y-1">
+            <Label htmlFor="gr_wt" className="text-xs font-medium">Gr Wt</Label>
             <Input
               type="number"
               id="gr_wt"
@@ -242,11 +248,12 @@ const ProductDetailsCard = ({
                   gr: Number(e.target.value),
                 })
               }
+              className="h-8 text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="net_wt">Net Wt</Label>
+          <div className="space-y-1">
+            <Label htmlFor="net_wt" className="text-xs font-medium">Net Wt</Label>
             <Input
               type="number"
               placeholder="Net Wt"
@@ -257,11 +264,12 @@ const ProductDetailsCard = ({
                   net: Number(e.target.value),
                 })
               }
+              className="h-8 text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="rate">Rate</Label>
+          <div className="space-y-1">
+            <Label htmlFor="rate" className="text-xs font-medium">Rate</Label>
             <Input
               id="rate"
               type="number"
@@ -273,28 +281,24 @@ const ProductDetailsCard = ({
                   rate: Number(e.target.value),
                 })
               }
+              className="h-8 text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="amt">Amount</Label>
+          <div className="space-y-1">
+            <Label htmlFor="amt" className="text-xs font-medium">Amount</Label>
             <Input
               id="amt"
               type="number"
               readOnly
               placeholder="Amount"
               value={newProduct.amt}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  amt: Number(e.target.value),
-                })
-              }
+              className="h-8 text-sm bg-gray-100"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="lbr_amt">Lbr Amt</Label>
+          <div className="space-y-1">
+            <Label htmlFor="lbr_amt" className="text-xs font-medium">Lbr Amt</Label>
             <Input
               id="lbr_amt"
               type="number"
@@ -306,12 +310,14 @@ const ProductDetailsCard = ({
                   lbr: Number(e.target.value),
                 })
               }
+              className="h-8 text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="product_name">Huid Amt</Label>
+          <div className="space-y-1">
+            <Label htmlFor="huid_amt" className="text-xs font-medium">Huid Amt</Label>
             <Input
+              id="huid_amt"
               type="number"
               placeholder="Huid Amt"
               value={newProduct.huid}
@@ -321,11 +327,12 @@ const ProductDetailsCard = ({
                   huid: Number(e.target.value),
                 })
               }
+              className="h-8 text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="o_charge">O. Charge</Label>
+          <div className="space-y-1">
+            <Label htmlFor="o_charge" className="text-xs font-medium">O. Charge</Label>
             <Input
               id="o_charge"
               type="number"
@@ -337,82 +344,93 @@ const ProductDetailsCard = ({
                   ochrg: Number(e.target.value),
                 })
               }
+              className="h-8 text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="total_amt">Total Amount</Label>
+          <div className="space-y-1">
+            <Label htmlFor="total_amt" className="text-xs font-medium">Total Amount</Label>
             <Input
               id="total_amt"
               type="number"
               readOnly
               placeholder="Total Amount"
               value={newProduct.tval}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  tval: Number(e.target.value),
-                })
-              }
+              className="h-8 text-sm bg-gray-100 font-medium"
             />
           </div>
 
-          <Button
-            type="button"
-            onClick={addProduct}
-            style={{ marginTop: "2rem" }}
-          >
-            {editingProduct ? "Update Product" : "Add Product"}
-          </Button>
-
-          {editingProduct ? (
+          <div className="flex gap-1 items-end">
             <Button
               type="button"
-              className="bg-red-500"
-              onClick={cancelProductEdit}
+              onClick={addProduct}
+              className="h-8 text-xs px-3 flex-1"
             >
-              Discard Edit
+              {editingProduct ? "Update" : "Add"}
             </Button>
-          ) : null}
+            {editingProduct && (
+              <Button
+                type="button"
+                variant="outline"
+                className="h-8 text-xs px-2"
+                onClick={cancelProductEdit}
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
         </div>
+
         {products.length > 0 && (
-          <Table className="border-2 mt-5">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Product Name</TableHead>
-                <TableHead>Net Wt</TableHead>
-                <TableHead>Total Amount</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {products.map((product: any) => (
-                <TableRow key={`${product.hsn}-${product.net}`} className="bg-gray-100">
-                  <TableCell>{product.pd}</TableCell>
-                  <TableCell>{product.net}</TableCell>
-                  <TableCell>{product.tval}</TableCell>
-                  <TableCell>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="mr-2"
-                      onClick={() => editProduct(product)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => deleteProduct(product.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
+          <div className="border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-100">
+                  <TableHead className="h-9 text-xs font-semibold">Product Name</TableHead>
+                  <TableHead className="h-9 text-xs font-semibold">HSN</TableHead>
+                  <TableHead className="h-9 text-xs font-semibold text-right">Pcs</TableHead>
+                  <TableHead className="h-9 text-xs font-semibold text-right">Net Wt</TableHead>
+                  <TableHead className="h-9 text-xs font-semibold text-right">Rate</TableHead>
+                  <TableHead className="h-9 text-xs font-semibold text-right">Total Amount</TableHead>
+                  <TableHead className="h-9 text-xs font-semibold text-center">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {products.map((product: any, index: number) => (
+                  <TableRow key={`${product.id || index}`} className="hover:bg-slate-50">
+                    <TableCell className="py-2 text-sm">{product.pd}</TableCell>
+                    <TableCell className="py-2 text-sm">{product.hsn}</TableCell>
+                    <TableCell className="py-2 text-sm text-right">{product.pcs}</TableCell>
+                    <TableCell className="py-2 text-sm text-right">{product.net}</TableCell>
+                    <TableCell className="py-2 text-sm text-right">{product.rate}</TableCell>
+                    <TableCell className="py-2 text-sm text-right font-medium">{product.tval}</TableCell>
+                    <TableCell className="py-2 text-center">
+                      <div className="flex gap-1 justify-center">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 p-0"
+                          onClick={() => editProduct(product)}
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                          onClick={() => deleteProduct(product.id)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </CardContent>
     </Card>

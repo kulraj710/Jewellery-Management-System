@@ -60,85 +60,101 @@ const handleDiscountChange = (event : any) => {
 };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>3. Billing</CardTitle>
+    <Card className="border-slate-200">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+          <span className="bg-orange-100 text-orange-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
+          Billing & Payment
+        </CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-cols-3 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="discount">Discount</Label>
-          <Input
-            id="discount"
-            placeholder="Enter discount"
-            value={discount}
-            onChange={handleDiscountChange}
-          />
+      <CardContent>
+        <div className="grid grid-cols-4 gap-3">
+          {/* Calculation Fields */}
+          <div className="space-y-1">
+            <Label htmlFor="discount" className="text-xs font-medium">Discount</Label>
+            <Input
+              id="discount"
+              placeholder="e.g., 100 or 10%"
+              value={discount}
+              onChange={handleDiscountChange}
+              className="h-9"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="netAmount" className="text-xs font-medium">Net Amount</Label>
+            <Input
+              id="netAmount"
+              type="number"
+              placeholder="Net amount"
+              value={netAmount}
+              readOnly
+              className="h-9 bg-gray-50"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="cgst" className="text-xs font-medium">CGST (1.5%)</Label>
+            <Input
+              id="cgst"
+              type="number"
+              placeholder="CGST"
+              value={cgst}
+              readOnly
+              className="h-9 bg-gray-50"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="sgst" className="text-xs font-medium">SGST (1.5%)</Label>
+            <Input
+              id="sgst"
+              type="number"
+              placeholder="SGST"
+              value={sgst}
+              readOnly
+              className="h-9 bg-gray-50"
+            />
+          </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="netAmount">Net Amount</Label>
-          <Input
-            id="netAmount"
-            type="number"
-            placeholder="Net amount"
-            value={netAmount}
-            readOnly
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="cgst">CGST</Label>
-          <Input
-            id="cgst"
-            type="number"
-            placeholder="CGST"
-            value={cgst}
-            readOnly
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="sgst">SGST</Label>
-          <Input
-            id="sgst"
-            type="number"
-            placeholder="SGST"
-            value={sgst}
-            readOnly
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="totalAmount">Total Amount</Label>
-          <Input
-            id="totalAmount"
-            type="number"
-            placeholder="Total amount"
-            value={finalAmount}
-            readOnly
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="payment">Payment</Label>
-          <Input
-            id="payment"
-            type="number"
-            placeholder="Enter payment"
-            value={invoiceData.payment}
-            onChange={(e) =>
-              setInvoiceData({
-                ...invoiceData,
-                payment: Number(e.target.value),
-              })
-            }
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="outstanding">Outstanding</Label>
-          <Input
-            id="outstanding"
-            type="number"
-            readOnly
-            placeholder="Outstanding amount"
-            value={(finalAmount - invoiceData.payment).toFixed(2)}
 
-          />
+        {/* Payment Summary Section */}
+        <div className="grid grid-cols-3 gap-3 mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="space-y-1">
+            <Label htmlFor="totalAmount" className="text-xs font-semibold text-blue-900">Total Amount</Label>
+            <Input
+              id="totalAmount"
+              type="number"
+              placeholder="Total amount"
+              value={finalAmount}
+              readOnly
+              className="h-9 bg-white font-semibold text-blue-900 border-blue-300"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="payment" className="text-xs font-medium text-blue-900">Payment Received</Label>
+            <Input
+              id="payment"
+              type="number"
+              placeholder="Enter payment"
+              value={invoiceData.payment}
+              onChange={(e) =>
+                setInvoiceData({
+                  ...invoiceData,
+                  payment: Number(e.target.value),
+                })
+              }
+              className="h-9 bg-white border-blue-300"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="outstanding" className="text-xs font-semibold text-blue-900">Outstanding</Label>
+            <Input
+              id="outstanding"
+              type="number"
+              readOnly
+              placeholder="Outstanding amount"
+              value={(finalAmount - invoiceData.payment).toFixed(2)}
+              className="h-9 bg-white font-semibold text-red-600 border-blue-300"
+            />
+          </div>
         </div>
       </CardContent>
     </Card>

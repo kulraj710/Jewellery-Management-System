@@ -2,7 +2,6 @@ import React from "react";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -17,13 +16,16 @@ interface Props {
 
 const PersonalInformationCard = ({invoiceData, setInvoiceData }: Props) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>1. Personal Information</CardTitle>
+    <Card className="border-slate-200">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+          <span className="bg-blue-100 text-blue-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+          Customer Information
+        </CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-cols-3 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="fullName">Full Name</Label>
+      <CardContent className="grid grid-cols-4 gap-3">
+        <div className="space-y-1">
+          <Label htmlFor="fullName" className="text-xs font-medium">Full Name</Label>
           <Input
             id="fullName"
             placeholder="Enter full name"
@@ -34,10 +36,11 @@ const PersonalInformationCard = ({invoiceData, setInvoiceData }: Props) => {
                 name: e.target.value,
               })
             }
+            className="h-9"
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="phone">Phone</Label>
+        <div className="space-y-1">
+          <Label htmlFor="phone" className="text-xs font-medium">Phone</Label>
           <Input
             id="phone"
             type="tel"
@@ -49,10 +52,11 @@ const PersonalInformationCard = ({invoiceData, setInvoiceData }: Props) => {
                 phone: e.target.value,
               })
             }
+            className="h-9"
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="gst">GST Number</Label>
+        <div className="space-y-1">
+          <Label htmlFor="gst" className="text-xs font-medium">GST Number</Label>
           <Input
             id="gst"
             placeholder="Enter GST number"
@@ -63,10 +67,11 @@ const PersonalInformationCard = ({invoiceData, setInvoiceData }: Props) => {
                 gstin: e.target.value,
               })
             }
+            className="h-9"
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="pan">PAN</Label>
+        <div className="space-y-1">
+          <Label htmlFor="pan" className="text-xs font-medium">PAN</Label>
           <Input
             id="pan"
             placeholder="Enter PAN"
@@ -77,10 +82,11 @@ const PersonalInformationCard = ({invoiceData, setInvoiceData }: Props) => {
                 pan: e.target.value,
               })
             }
+            className="h-9"
           />
         </div>
-        <div className="space-y-2 col-span-3">
-          <Label htmlFor="address">Address</Label>
+        <div className="space-y-1 col-span-4">
+          <Label htmlFor="address" className="text-xs font-medium">Address</Label>
           <Textarea
             id="address"
             placeholder="Enter address"
@@ -91,6 +97,7 @@ const PersonalInformationCard = ({invoiceData, setInvoiceData }: Props) => {
                 address: e.target.value,
               })
             }
+            className="resize-none h-16"
           />
         </div>
       </CardContent>

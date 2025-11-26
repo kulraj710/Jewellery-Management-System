@@ -14,7 +14,7 @@ export function AddDatePicker({ selectedDate, setSelectedDate, showClearDate = f
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="w-[100%] justify-start text-left font-normal"
+            className="w-[100%] h-9 justify-start text-left font-normal text-sm"
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
@@ -34,7 +34,7 @@ export function AddDatePicker({ selectedDate, setSelectedDate, showClearDate = f
       </Popover>
 
       {(selectedDate && showClearDate) && (
-        <Button variant="ghost" onClick={() => setSelectedDate(null)}>
+        <Button variant="ghost" className="h-9" onClick={() => setSelectedDate(null)}>
           Clear Date
         </Button>
       )}
